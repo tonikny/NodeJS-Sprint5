@@ -4,6 +4,8 @@ import { SalaComponent } from './sala/sala.component';
 
 const routes: Routes = [
   { path: 'sala', component: SalaComponent },
+  { path: '', component: SalaComponent },
+  { path: 'sales', component: SalaComponent },
 ];
 
 @NgModule({

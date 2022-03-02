@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const env = process.env.NODE_ENV; // 'dev' or 'test'
+const env = process.env.NODE_ENV; // 'dev' o 'prod'
 
 const dev = {
   app: {
@@ -12,20 +12,20 @@ const dev = {
     name: process.env.DEV_DB_NAME || 'db'
   }
 };
-const test = {
+const prod = {
   app: {
-    port: parseInt(process.env.TEST_APP_PORT) || 3000
+    port: parseInt(process.env.PROD_APP_PORT) || 3000
   },
   db: {
-    host: process.env.TEST_DB_HOST || 'localhost',
-    port: parseInt(process.env.TEST_DB_PORT) || 27017,
-    name: process.env.TEST_DB_NAME || 'test'
+    host: process.env.PROD_DB_HOST || 'localhost',
+    port: parseInt(process.env.PROD_DB_PORT) || 27017,
+    name: process.env.PROD_DB_NAME || 'test'
   }
 };
 
 const config = {
   dev,
-  test
+  prod
 };
 const entorn = config[env];
 
