@@ -1,7 +1,7 @@
 
 const initServer = () => {
 
-  const { entorn } = require('../config/config');
+  const { config } = require('../config/config');
   const cors = require('cors');
   const express = require('express');
   const app = express();
@@ -14,7 +14,7 @@ const initServer = () => {
       origins: ["*"]
     }
   });
-  const { app: { port } } = entorn;
+  const { app: { port } } = config;
 
 
   io.on('connection', (socket) => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { XatService } from './xat.service';
+import { SalaService, Sala } from './sala.service';
 
 @Component({
   selector: 'app-sala',
@@ -7,23 +7,21 @@ import { XatService } from './xat.service';
   styleUrls: ['./sala.component.sass'],
 })
 export class SalaComponent implements OnInit {
-  newMessage: string = '';
-  messageList: string[] = [];
+  sales: Sala[] = []; //FIXME: canviar a tipus concret
+  //FIXME: canviar a tipus concret
 
-  constructor(private xatService: XatService) {
-    (async () => await xatService.provaGetRestApi())();
-  }
-
-  ngOnInit() {
-    this.xatService.getNewMessage().subscribe((message: string) => {
-      this.messageList.push(message);
+  constructor(private salaService: SalaService) {
+    //FIXME: treure la prova
+    //this.salaService.provaGetRestApi();
+    this.salaService.getSales().subscribe((sales: Sala[]) => {
+      this.sales = sales;
+      //console.log('sales:', sales);
     });
+    //console.log(this.sales);
+    
   }
 
-  sendMessage() {
-    this.xatService.sendMessage(this.newMessage);
-    this.newMessage = '';
-  }
+  ngOnInit() {}
 
-  
+
 }

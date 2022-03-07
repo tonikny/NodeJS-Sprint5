@@ -6,11 +6,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { SalaComponent } from './sala/sala.component';
+import { XatComponent } from './xat/xat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SalaComponent
+    SalaComponent,
+    XatComponent
   ],
   imports: [
     BrowserModule,
