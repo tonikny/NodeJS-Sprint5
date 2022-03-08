@@ -37,8 +37,8 @@ const entorn = {
 };
 const config = entorn[env];
 
-const jwt = {
+const jwtSecretToken = {
   token: process.env.TOKEN_SECRET
 };
 
-module.exports = { config, jwt };
+module.exports = { config, jwtSecretToken };

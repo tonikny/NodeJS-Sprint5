@@ -12,7 +12,7 @@ import { XatComponent } from './xat/xat.component';
   declarations: [
     AppComponent,
     SalaComponent,
-    XatComponent
+    XatComponent,
   ],
   imports: [
     BrowserModule,

@@ -15,9 +15,9 @@
     - **controllers/** - gestió d'e/s 
     - **helpers/**
     - **middlewares/**
-    - **models/** - models de classes (depenent del gestor de BD)
+    - **models/** - models de classes
     - **routes/** - gestió de les rutes
-    - **services/** - lògica de l'aplicació (indepenent del gestor de BD)
+    - **services/** - lògica de l'aplicació
 - **app.js** - Punt d'entrada a l'aplicació
 - **.env_DIST** - template de .env
 - **package.json**

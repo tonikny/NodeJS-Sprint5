@@ -40,7 +40,11 @@ const initServer = () => {
   app.use(express.json());
 
   // Enrutadors
+  const authorize = require('../middlewares/auth')
+
+  app.use('/', authorize, routes.auth);
   app.use('/sales', routes.sales);
+  app.use('/users', routes.users);
 
 }
 
