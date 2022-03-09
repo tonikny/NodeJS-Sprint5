@@ -4,19 +4,20 @@ const initServer = () => {
   const { config } = require('../config/config');
   const cors = require('cors');
   const express = require('express');
-  const app = express();
   const { createServer } = require("http");
   const { Server } = require("socket.io");
   const authorize = require('../middlewares/auth');
 
+  const app = express();
   const httpServer = createServer(app);
+
+
   const io = new Server(httpServer, {
     cors: {
       origins: ["*"]
     }
   });
   const { app: { port } } = config;
-
 
   io.on('connection', (socket) => {
     console.log('a user connected');
@@ -32,18 +33,11 @@ const initServer = () => {
   });
 
 
+  // Arrencar el servidor http
   httpServer.listen(port, () => console.log(`listening on port ${port}`));
 
-
-  const sales = require('../routes');
-
-  app.use(cors());
-  app.use(express.json());
-
-  // Enrutadors
-  app.use('/sales', routes.sales);
-  app.use('/users', authorize, routes.users);
-  app.use('/', routes.auth);
+  // Carrega de rutes
+  require("../routes")(app);
 
 }
 

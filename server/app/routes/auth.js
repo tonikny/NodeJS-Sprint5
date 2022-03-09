@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const { check } = require('express-validator');
-const validate  = require('../middlewares/validator.js');
+const validate = require('../middlewares/validator.js');
 const controllers = require('../controllers');
 
 // Regles de validacio de formularis

@@ -8,7 +8,7 @@ module.exports = {
 
   register: (req, res, next) => {
     bcrypt.hash(req.body.password, 10).then((hash) => {
-      //TODO: fer servir el service
+      //TODO: fer servir userService
       const user = User.build({
         nom: req.body.nom,
         email: req.body.email,
@@ -32,7 +32,7 @@ module.exports = {
 
   login: async (req, res, next) => {
     let getUser
-    //TODO: fer servir el service
+    //TODO: fer servir authService + userService?
     const user = await User.findOne({
       where: {
         email: req.body.email,
