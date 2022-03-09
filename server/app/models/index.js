@@ -5,22 +5,22 @@ const dbUrl = `mysql://${user}:${pass}@${host}:${port}/${name}`;
 const { Sequelize, DataTypes } = require('sequelize')
 const UserModel = require('./user')
 const SalaModel = require('./sala')
-//const TagModel = require('./models/tag')
+const MissatgeModel = require('./missatge')
 
 const sequelize = new Sequelize(dbUrl, { logging: debug })
 
-const User = UserModel(sequelize, DataTypes)
-// BlogTag will be our way of tracking relationship between Blog and Tag models
-// each Blog can have multiple tags and each Tag can have multiple blogs
-//const BlogTag = sequelize.define('blog_tag', {})
+// Models
+const User = UserModel(sequelize, DataTypes);
 const Sala = SalaModel(sequelize, DataTypes);
-//const Tag = TagModel(sequelize, Sequelize)
+const Missatge = MissatgeModel(sequelize, DataTypes);
 
-// Blog.belongsToMany(Tag, { through: BlogTag, unique: false })
-// Tag.belongsToMany(Blog, { through: BlogTag, unique: false })
-// Blog.belongsTo(User);
+// Relacions
+User.hasMany(Missatge, { foreignKey: 'userId' });
+Missatge.belongsTo(User);
+Sala.hasMany(Missatge, { foreignKey: 'salaId' });
+Missatge.belongsTo(Sala);
 
-
+// Inicialitzar BD, si cal
 (async () => {
   await sequelize.sync({ force: recreate });
   if (recreate) {
@@ -29,7 +29,7 @@ const Sala = SalaModel(sequelize, DataTypes);
       { id: 2, nom: 'salaX' }
     ]);
     await User.bulkCreate([
-      { id: 1, nom: 'toni', email:'a@a.com', password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS' },
+      { id: 1, nom: 'toni', email: 'a@a.com', password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS' }, // password = 'xxx'
     ]);
   }
   console.log(`Tables created & populated!`)
@@ -38,5 +38,5 @@ const Sala = SalaModel(sequelize, DataTypes);
 module.exports = {
   User,
   Sala,
-  //Tag
+  Missatge
 }
