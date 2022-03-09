@@ -7,6 +7,7 @@ const initServer = () => {
   const app = express();
   const { createServer } = require("http");
   const { Server } = require("socket.io");
+  const authorize = require('../middlewares/auth');
 
   const httpServer = createServer(app);
   const io = new Server(httpServer, {
@@ -40,11 +41,9 @@ const initServer = () => {
   app.use(express.json());
 
   // Enrutadors
-  const authorize = require('../middlewares/auth')
-
-  app.use('/', authorize, routes.auth);
   app.use('/sales', routes.sales);
-  app.use('/users', routes.users);
+  app.use('/users', authorize, routes.users);
+  app.use('/', routes.auth);
 
 }
 
