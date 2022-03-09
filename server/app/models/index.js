@@ -3,22 +3,20 @@ const { db: { host, port, user, pass, name, debug, recreate } } = config;
 const dbUrl = `mysql://${user}:${pass}@${host}:${port}/${name}`;
 
 const { Sequelize, DataTypes } = require('sequelize')
-const UserModel = require('./user')
-const SalaModel = require('./sala')
-const MissatgeModel = require('./missatge')
-
 const sequelize = new Sequelize(dbUrl, { logging: debug })
 
 // Models
-const User = UserModel(sequelize, DataTypes);
-const Sala = SalaModel(sequelize, DataTypes);
-const Missatge = MissatgeModel(sequelize, DataTypes);
+const User = require('./user')(sequelize, DataTypes);
+const Sala = require('./sala')(sequelize, DataTypes);
+const Missatge = require('./missatge')(sequelize, DataTypes);
 
 // Relacions
-User.hasMany(Missatge, { foreignKey: 'userId' });
+User.belongsTo(Sala);
+Sala.hasMany(User, { foreignKey: 'connectatASala'});
 Missatge.belongsTo(User);
-Sala.hasMany(Missatge, { foreignKey: 'salaId' });
+User.hasMany(Missatge, { foreignKey: 'userId' });
 Missatge.belongsTo(Sala);
+Sala.hasMany(Missatge, { foreignKey: 'salaId' });
 
 // Inicialitzar BD, si cal
 (async () => {
@@ -29,7 +27,8 @@ Missatge.belongsTo(Sala);
       { id: 2, nom: 'salaX' }
     ]);
     await User.bulkCreate([
-      { id: 1, nom: 'toni', email: 'a@a.com', password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS' }, // password = 'xxx'
+      { id: 1, nom: 'toni', email: 'a@a.com', connectatASala: 2,
+      password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS' }, // password = 'xxx'
     ]);
   }
   console.log(`Tables created & populated!`)
@@ -38,5 +37,6 @@ Missatge.belongsTo(Sala);
 module.exports = {
   User,
   Sala,
-  Missatge
+  Missatge,
+  Sequelize
 }

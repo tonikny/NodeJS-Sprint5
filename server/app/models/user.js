@@ -17,6 +17,9 @@ module.exports = (sequelize, type) => {
     password: {
       type: type.STRING,
       allowNull: false
+    },
+    connectatASala: {
+      type: type.INTEGER,
     }
   }, {
     createdAt: true,
