@@ -5,12 +5,17 @@ module.exports = (sequelize, type) => {
       primaryKey: true,
       autoIncrement: true
     },
+    text: {
+      type: type.STRING,
+      allowNull: false
+    },
     salaId: {
       type: type.INTEGER,
       allowNull: false
     },
     userId: {
-      type: type.INTEGER
+      type: type.INTEGER,
+      allowNull: false
     },
   }, {
     createdAt: true,

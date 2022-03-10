@@ -7,13 +7,16 @@ module.exports = (sequelize, type) => {
     },
     nom: {
       type: type.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     descripcio: {
       type: type.STRING
     },
-    creada_per: {
-      type: type.INTEGER
+    creadaPer: {
+      type: type.INTEGER,
+      allowNull:true,
+      defaultValue:null
     }
   }, {
     createdAt: true,

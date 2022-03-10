@@ -2,15 +2,16 @@ const router = require('express').Router();
 const controllers = require('../controllers');
 const authorize = require('../middlewares/auth');
 
-//router.use(authorize);
+router.use(authorize);
 
-//app.post("/"); // crear sala
-//app.get("/:nom"); // obtenir sala
+// crear sala
+router.post("/", controllers.sales.crearSala); // crear sala
+
+//TODO: entrar a sala
+router.get("/:nom"); // entrar a sala
 
 // obtenir sales
 router.get("/", controllers.sales.getSales);
-//router.get("/users/:id", validateJWT, getUserName);
-
 
 
 module.exports = router;

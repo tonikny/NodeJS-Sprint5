@@ -49,10 +49,11 @@ module.exports = {
         {
           email: getUser.email,
           userId: getUser.id,
+          nom: getUser.nom
         },
         jwtSecretToken.token,
         {
-          expiresIn: '1h',
+          expiresIn: '1d',
         },
       )
       res.status(200).json({
@@ -65,6 +66,9 @@ module.exports = {
         message: 'Authentication failed',
       })
     }
-  }
+  },
 
-}
+  //TODO: logout
+  logout: async (req, res, next) => {}
+
+  }

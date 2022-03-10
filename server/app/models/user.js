@@ -20,6 +20,8 @@ module.exports = (sequelize, type) => {
     },
     connectatASala: {
       type: type.INTEGER,
+      allowNull:true,
+      defaultValue:null
     }
   }, {
     createdAt: true,
