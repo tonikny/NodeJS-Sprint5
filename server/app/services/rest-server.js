@@ -2,36 +2,18 @@
 const initServer = () => {
 
   const { config } = require('../config/config');
-  const cors = require('cors');
   const express = require('express');
   const { createServer } = require("http");
-  const { Server } = require("socket.io");
+  const initSocket = require('./socket');
   const authorize = require('../middlewares/auth');
 
   const app = express();
   const httpServer = createServer(app);
 
-
-  const io = new Server(httpServer, {
-    cors: {
-      origins: ["*"]
-    }
-  });
   const { app: { port } } = config;
 
-  io.on('connection', (socket) => {
-    console.log('a user connected');
-
-    socket.on('message', (message) => {
-      console.log(message);
-      io.emit('message', `${socket.id.substring(0, 2)} \u27A5 ${message}`);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('a user disconnected!');
-    });
-  });
-
+  // definicio de socket
+  initSocket(httpServer);
 
   // Arrencar el servidor http
   httpServer.listen(port, () => console.log(`listening on port ${port}`));

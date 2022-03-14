@@ -4,7 +4,7 @@ module.exports = {
 
   getSales: async (req, res) => {
     sales = await salesService.obtenirSales();
-    res.json(sales);
+    res.json({ msg: sales });
   },
 
   // crear sala

@@ -14,20 +14,13 @@ const Missatge = require('./missatge')(sequelize, DataTypes);
 // Relacions
 User.belongsTo(Sala, { foreignKey: 'connectatASala' });
 Sala.hasMany(User, { foreignKey: 'connectatASala' });
+
 Sala.belongsTo(User, { foreignKey: 'creadaPer', constraints: false });
 User.hasMany(Sala, { foreignKey: 'creadaPer', constraints: false });
-const fk_creadaPer = {
-  type: 'foreign key',
-  fields: ['creadaPer'],
-  onDelete: 'SET NULL',
-  onUpdate: 'CASCADE',
-  references: {
-    table: 'users',
-    field: 'id',
-  }
-}
+
 Missatge.belongsTo(User);
 User.hasMany(Missatge, { foreignKey: 'userId' });
+
 Missatge.belongsTo(Sala);
 Sala.hasMany(Missatge, { foreignKey: 'salaId' });
 
@@ -37,14 +30,17 @@ Sala.hasMany(Missatge, { foreignKey: 'salaId' });
 (async () => {
 
   if (recreate) {
+    // creacio de base de dades
     try {
       const conn = await mysql.createConnection({ host, port, user, password: pass });
       await conn.query(`DROP DATABASE IF EXISTS \`${name}\`;`);
       await conn.query(`CREATE DATABASE IF NOT EXISTS \`${name}\`;`);
     } catch (e) {
       console.error('No es pot recrear a la bd', e);
+      process.exit();
     }
   }
+  // creacio de taules i relacions (menys 'creadaPer')
   try {
     await sequelize.sync({ force: recreate });
   } catch (e) {
@@ -52,29 +48,42 @@ Sala.hasMany(Missatge, { foreignKey: 'salaId' });
   }
 
   if (recreate) {
+    // crear la foreign key 'creadaPer', que no es pot crear amb relacions
+    // directes per problemes de circularitat
     try {
+      const fk_creadaPer = {
+        type: 'foreign key',
+        fields: ['creadaPer'],
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+        references: {
+          table: 'users',
+          field: 'id',
+        }
+      }
       const queryInterface = sequelize.getQueryInterface();
       const addMediaUserForeignKey = queryInterface.addConstraint(
         'sales', fk_creadaPer
       ).catch((e) => {
         console.error('Error en crear foreign key', e);
-        throw (e)
+        process.exit();
       });
         
-      await Sala.bulkCreate([
-        { id: 1, nom: 'sala1' },
-        { id: 2, nom: 'salaX' }
-      ]);
+      // Dades de prova
       await User.bulkCreate([
         {
-          id: 1, nom: 'toni', email: 'a@a.com', connectatASala: 2,
+          id: 1, nom: 'toni', email: 'a@a.com',
           password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS'
         }, // password = 'xxx'
       ]);
+      await Sala.bulkCreate([
+        { id: 1, nom: 'sala1', creadaPer: 1 },
+        { id: 2, nom: 'salaX', creadaPer: 1 }
+      ]);
       console.log(`Tables created & populated!`)
     } catch (e) {
-      console.error('Error inserint dades');
-      throw (e);
+      console.error('Error inserint dades', e.original);
+      process.exit();
     }
   }
 })();

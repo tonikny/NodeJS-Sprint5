@@ -23,8 +23,8 @@ const prod = {
   db: {
     host: process.env.PROD_DB_HOST || 'localhost',
     port: parseInt(process.env.PROD_DB_PORT) || 3306,
-    user: process.env.DEV_DB_USER,
-    pass: process.env.DEV_DB_PASS,
+    user: process.env.PROD_DB_USER,
+    pass: process.env.PROD_DB_PASS,
     name: process.env.PROD_DB_NAME,
     recreate: false,
     debug: false
