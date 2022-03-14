@@ -1,5 +1,5 @@
 const { config } = require('../config/config');
-const { db: { host, port, user, pass, name, debug, recreate } } = config;
+const { db: { host, port, user, pass, name, debug, recreate, populate } } = config;
 const dbUrl = `mysql://${user}:${pass}@${host}:${port}/${name}`;
 
 const mysql = require('mysql2/promise');
@@ -68,19 +68,22 @@ Sala.hasMany(Missatge, { foreignKey: 'salaId' });
         console.error('Error en crear foreign key', e);
         process.exit();
       });
-        
+      console.log(`Tables created!`)
+
       // Dades de prova
-      await User.bulkCreate([
-        {
-          id: 1, nom: 'toni', email: 'a@a.com',
-          password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS'
-        }, // password = 'xxx'
-      ]);
-      await Sala.bulkCreate([
-        { id: 1, nom: 'sala1', creadaPer: 1 },
-        { id: 2, nom: 'salaX', creadaPer: 1 }
-      ]);
-      console.log(`Tables created & populated!`)
+      if (populate) {
+        await User.bulkCreate([
+          {
+            id: 1, nom: 'toni', email: 'a@a.com',
+            password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS'
+          }, // password = 'xxx'
+        ]);
+        await Sala.bulkCreate([
+          { id: 1, nom: 'sala1', creadaPer: 1 },
+          { id: 2, nom: 'salaX', creadaPer: 1 }
+        ]);
+        console.log(`Tables populated!`)
+      }
     } catch (e) {
       console.error('Error inserint dades', e.original);
       process.exit();

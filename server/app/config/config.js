@@ -13,6 +13,7 @@ const dev = {
     pass: process.env.DEV_DB_PASS,
     name: process.env.DEV_DB_NAME,
     recreate: process.env.RECREATE_DB === 'true',
+    populate: process.env.POPULATE_DB === 'true',
     debug: (process.env.DEBUG_DB !== 'true')?false:console.log
   }
 };
@@ -27,6 +28,7 @@ const prod = {
     pass: process.env.PROD_DB_PASS,
     name: process.env.PROD_DB_NAME,
     recreate: false,
+    populate: false,
     debug: false
   }
 };
