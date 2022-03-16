@@ -12,26 +12,39 @@
 <router-outlet></router-outlet> -->
 
 <!-- Toolbar -->
-<!-- <mat-toolbar color="primary" class="app-header">
+<mat-toolbar color="primary" class="app-header">
   <span>
-    <a mat-button *ngIf="!this.authService.isLoggedIn" routerLinkActive="active" routerLink="/login">Login</a>
-    <a mat-button *ngIf="!this.authService.isLoggedIn" routerLinkActive="active"
-    routerLinkActive="active" routerLink="/register">Register</a>
-  <button mat-button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button">Logout</button>
-
-  <button mat-button routerLink="login" routerLinkActive="active">Log in</button>
-    <a mat-fab color="primary" routerLink="register" routerLinkActive="active">Register</a>
+    <a
+      mat-button
+      *ngIf="!this.authService.isLoggedIn"
+      routerLinkActive="active"
+      routerLink="/login"
+      >Login</a
+    >
+    <a
+      mat-button
+      *ngIf="!this.authService.isLoggedIn"
+      routerLinkActive="active"
+      routerLinkActive="active"
+      routerLink="/register"
+      >Register</a
+    >
+    <a
+      mat-button
+      (click)="logout()"
+      *ngIf="this.authService.isLoggedIn"
+      type="button"
+      >Logout</a
+    >
   </span>
-</mat-toolbar> -->
+</mat-toolbar>
 
-<mat-toolbar color="danger">
+<!-- <mat-toolbar color="danger">
   <span>Application Title</span>
 
-  <!-- This fills the remaining space of the current row -->
   <span class="example-fill-remaining-space"></span>
 
   <span>Right Aligned Text</span>
-</mat-toolbar>
+</mat-toolbar> -->
 
 <router-outlet></router-outlet>
-

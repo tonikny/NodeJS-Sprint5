@@ -34,5 +34,7 @@ export class SalaService {
 export interface Sala {
   id?: number;
   nom: string;
+  descripcio?: string;
   nombreUsuaris: number;
+
 }
