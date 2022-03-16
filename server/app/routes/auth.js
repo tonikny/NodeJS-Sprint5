@@ -14,7 +14,7 @@ const userValidationRules = [
   check('password', 'Password should be between 5 to 8 characters long')
     .not()
     .isEmpty()
-    .isLength({ min: 5, max: 8 }),
+    .isLength({ min: 2, max: 8 }),
 ];
 
 // Rutes

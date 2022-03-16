@@ -1,1 +1,37 @@
+<!-- <div
+  class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm fixed-top">
+  <nav class="my-2 my-md-0 mr-md-3">
+    <a *ngIf="this.authService.isLoggedIn" class="p-2 text-dark">User</a>
+    <a *ngIf="!this.authService.isLoggedIn" class="p-2 text-dark" routerLinkActive="active" routerLink="/login">Login</a>
+  </nav>
+  <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
+    routerLinkActive="active" routerLink="/register">Register</a>
+  <button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button" class="btn btn-danger">Logout</button>
+</div>
+
+<router-outlet></router-outlet> -->
+
+<!-- Toolbar -->
+<!-- <mat-toolbar color="primary" class="app-header">
+  <span>
+    <a mat-button *ngIf="!this.authService.isLoggedIn" routerLinkActive="active" routerLink="/login">Login</a>
+    <a mat-button *ngIf="!this.authService.isLoggedIn" routerLinkActive="active"
+    routerLinkActive="active" routerLink="/register">Register</a>
+  <button mat-button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button">Logout</button>
+
+  <button mat-button routerLink="login" routerLinkActive="active">Log in</button>
+    <a mat-fab color="primary" routerLink="register" routerLinkActive="active">Register</a>
+  </span>
+</mat-toolbar> -->
+
+<mat-toolbar color="danger">
+  <span>Application Title</span>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="example-fill-remaining-space"></span>
+
+  <span>Right Aligned Text</span>
+</mat-toolbar>
+
 <router-outlet></router-outlet>
+

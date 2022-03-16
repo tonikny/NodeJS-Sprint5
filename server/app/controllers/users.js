@@ -13,12 +13,11 @@ module.exports = {
   },
 
   getUser: async (req, res, next) => {
+    console.log('Server: user id:', req.params.id);
     if (req.params.id) {
       const user = await userService.obtenirUser(req.params.id);
       if (user) {
-        res.status(200).json({
-          msg: user,
-        })
+        res.status(200).json(user);
       } else {
         res.status(404).json({ error: 'No existeix usuari' })
       }

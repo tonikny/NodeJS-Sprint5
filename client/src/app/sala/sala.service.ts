@@ -13,7 +13,7 @@ export class SalaService {
 
   //FIXME: treure la prova
   provaGetRestApi() {
-    const url = environment.REST_SERVER_URL + 'sales';
+    const url = environment.REST_SERVER_URL + '/sales';
 
     this.http.get(url).subscribe((res) => {
       console.log(res);
@@ -21,7 +21,7 @@ export class SalaService {
   }
 
   getSales(): Observable<Sala[]> {
-    const url = environment.REST_SERVER_URL + 'sales';
+    const url = environment.REST_SERVER_URL + '/sales';
     return this.http.get<Sala[]>(url).pipe(
       catchError((err) => {
         console.error(err);

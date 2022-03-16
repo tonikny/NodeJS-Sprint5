@@ -13,10 +13,10 @@ const initSocket = (httpServer) => {
   io.on('connection', (socket) => {
     console.log('user connected');
 
-    socket.on('message', (message) => {
-      missatgesService.crearMissatge(message,1,1); //TODO obtenir salaId i userId
+    socket.on('message', (message, salaId, userId, nom) => {
+      missatgesService.crearMissatge(message, salaId, userId);
       //console.log(message);
-      io.emit('message', `${socket.id.substring(0, 2)} \u27A5 ${message}`);
+      io.emit('message', `${nom} \u27A5 ${message}`);
     });
 
     socket.on('disconnect', () => {

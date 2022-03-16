@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 
-const sales = require('./sales');
-const users = require('./users');
-const auth = require('./auth');
+const salesRoutes = require('./sales');
+const usersRoutes = require('./users');
+const authRoutes = require('./auth');
 
 // guaranteed to get dependencies
 /* const allRoutes = () => {
@@ -22,9 +22,9 @@ module.exports = (app) => {
   app.use(express.json());
 
   // Enrutadors
-  app.use('/sales', sales);
-  app.use('/users', users);
-  app.use('/', auth);
+  app.use('/sales', salesRoutes);
+  app.use('/users', usersRoutes);
+  app.use('/', authRoutes);
 
   // catch 404 and forward to error handler
   app.use('*', (req, res) => {

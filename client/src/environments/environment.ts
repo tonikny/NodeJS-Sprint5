@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  REST_SERVER_URL: 'http://localhost:3001/'
+  REST_SERVER_URL: 'http://localhost:3001'
 };
 
 /*

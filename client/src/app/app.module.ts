@@ -1,26 +1,40 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
 
+import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularMaterialModule } from './angular-material.module';
 import { SalaComponent } from './sala/sala.component';
-import { XatComponent } from './xat/xat.component';
+import { MissatgeComponent } from './missatge/missatge.component';
+import { AuthModule } from './auth/auth.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './shared/authconfig.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     SalaComponent,
-    XatComponent,
+    MissatgeComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    FormsModule
+    BrowserAnimationsModule,
+    AngularMaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AuthModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

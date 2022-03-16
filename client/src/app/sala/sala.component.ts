@@ -4,24 +4,19 @@ import { SalaService, Sala } from './sala.service';
 @Component({
   selector: 'app-sala',
   templateUrl: './sala.component.html',
-  styleUrls: ['./sala.component.sass'],
+  styleUrls: ['./sala.component.scss']
 })
 export class SalaComponent implements OnInit {
-  sales: Sala[] = []; //FIXME: canviar a tipus concret
-  //FIXME: canviar a tipus concret
+
+  sales: Sala[] = [];
 
   constructor(private salaService: SalaService) {
-    //FIXME: treure la prova
-    //this.salaService.provaGetRestApi();
-    this.salaService.getSales().subscribe((sales: Sala[]) => {
-      this.sales = sales;
-      //console.log('sales:', sales);
+    this.salaService.getSales().subscribe((sales: any) => {
+      this.sales = sales.msg;
     });
-    //console.log(this.sales);
     
   }
-
-  ngOnInit() {}
-
+  ngOnInit(): void {
+  }
 
 }
