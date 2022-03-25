@@ -17,7 +17,7 @@ class UserService {
 
   static async modificarUser(id, dades) {
     try {
-      const result =  await models.User.update(dades, { where: { id: id } });
+      const result = await models.User.update(dades, { where: { id: id } });
       return (result[0] != 0)
     }
     catch (e) { throw (e) }
@@ -25,12 +25,22 @@ class UserService {
 
   static async esborrarUser(id) {
     try {
-      const result =  await models.User.destroy({ where: { id: id } });
+      const result = await models.User.destroy({ where: { id: id } });
       return (result !== 0)
     }
     catch (e) { throw (e) }
   }
 
+  static async surtSala(userId) {
+    UserService.modificarUser(userId, { connectatASala: null });
+  };
+
+  static async nombreUsuarisSala(SalaId) {
+    try {
+      return await models.User.count({ where: { connectatASala: SalaId }, raw: true });
+    }
+    catch (e) { throw (e) }
+  }
 }
 
 module.exports = UserService;

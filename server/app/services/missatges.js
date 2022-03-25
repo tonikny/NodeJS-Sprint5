@@ -9,23 +9,24 @@ class MissatgesService {
         salaId: salaId
       },
       order: [
-        ['createdAt', 'DESC']
+        ['createdAt']
       ],
       limit: 50
     });
     return missatges;
   }
 
-  static async crearMissatge(text,salaId, userId) {
+  static async crearMissatge(m) {
     try {
+      console.log('Missatge.service-crearMissatge:',m);
       const missatge = models.Missatge.build({
-        text: text,
-        salaId: salaId,
-        userId: userId
+        text: m.text,
+        salaId: m.salaId,
+        userId: m.userId
       });
       await missatge.save();
     } catch (e) {
-      console.error('Error db creant nissatge', e.original);
+      console.error('Error db creant missatge', e);
       throw (e);
     }
   }

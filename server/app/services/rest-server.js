@@ -5,7 +5,6 @@ const initServer = () => {
   const express = require('express');
   const { createServer } = require("http");
   const initSocket = require('./socket');
-  const authorize = require('../middlewares/auth');
 
   const app = express();
   const httpServer = createServer(app);
@@ -16,6 +15,7 @@ const initServer = () => {
   initSocket(httpServer);
 
   // Arrencar el servidor http
+  //httpServer.listen(port, '192.168.1.100', () => console.log(`listening on port ${port}`));
   httpServer.listen(port, () => console.log(`listening on port ${port}`));
 
   // Carrega de rutes

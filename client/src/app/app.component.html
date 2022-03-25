@@ -13,28 +13,31 @@
 
 <!-- Toolbar -->
 <mat-toolbar color="primary" class="app-header">
+  <span class="spacer"></span>
   <span>
     <a
       mat-button
+      class="gap enllac-top"
       *ngIf="!this.authService.isLoggedIn"
       routerLinkActive="active"
       routerLink="/login"
-      >Login</a
+      >Entra</a
     >
     <a
       mat-button
+      class="enllac-top"
       *ngIf="!this.authService.isLoggedIn"
       routerLinkActive="active"
-      routerLinkActive="active"
       routerLink="/register"
-      >Register</a
+      >Registre</a
     >
     <a
       mat-button
+      class="enllac-top"
       (click)="logout()"
       *ngIf="this.authService.isLoggedIn"
       type="button"
-      >Logout</a
+      >Surt</a
     >
   </span>
 </mat-toolbar>

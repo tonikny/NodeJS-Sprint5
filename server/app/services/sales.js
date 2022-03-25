@@ -1,27 +1,30 @@
 const models = require('../models');
+module.exports = {
 
-class SalaService {
-
-  static async obtenirSales() {
+  obtenirSales: async () => {
     try {
       const sales = await models.Sala.findAll({
         attributes: {
-          include: [[models.Sequelize.fn("COUNT", models.Sequelize.col("connectatASala")), "nUsuaris"]]
+          include: [[models.Sequelize.fn("COUNT", models.Sequelize.col("connectatASala")), "nombreUsuaris"]],
         },
         include: [{
           model: models.User, attributes: []
         }],
-        group: ['id']
+        group: ['id'],
+        raw:true
       });
-      return sales;
+      //this.sales.map(o => { console.log('---', o.dataValues) });
+      this.sales = sales;
+      console.log('-------Sales----------->',this.sales.map(o=>o.nom));
+      return this.sales;
     }
     catch (e) {
-      //
+      throw (e);
     }
-  }
+  },
 
   // crear sala
-  static async crearSala(nom, userId) {
+  crearSala: async(nom, userId) =>{
     try {
       const sala = models.Sala.build({
         nom: nom,
@@ -30,15 +33,39 @@ class SalaService {
       await sala.save();
     } catch (e) {
       console.error('Error db creant sala', e.original);
-      throw(e);
+      throw (e);
+    }
+  },
+
+  // entrar a sala
+  entrarASala: async(userId, salaId) =>{
+    console.log('Usuari ' + userId + ' entra a Sala ' + salaId);
+    try {
+      await models.User.update({ connectatASala: salaId }, {
+        where: {
+          id: userId
+        }
+      });
+      const sala = await models.Sala.findByPk(salaId, {raw:true});
+      return sala;
+    } catch (e) {
+      console.error('Error db entrant a sala', e.original);
+      throw (e);
+    }
+  },
+
+  // sortir de sala
+  sortirDeSala: async(id)=> {
+    try {
+      await models.User.update({ connectatASala: null }, {
+        where: {
+          id: id
+        }
+      });
+    } catch (e) {
+      console.error('Error db sortint de sala', e.original);
+      throw (e);
     }
   }
 
-  //TODO: entrar a sala
-  static async entrarASala(id) {
-
-  }
-
 }
-
-module.exports = SalaService;

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const { jwtSecretToken } = require('../config/config');
 const userService = require('../services/users');
 const { User } = require('../models')
+const currentUser = require('../services/currentuser');
 
 module.exports = {
 
@@ -31,12 +32,13 @@ module.exports = {
   },
 
   login: async (req, res, next) => {
-    let getUser
+    let getUser;
     //TODO: fer servir authService + userService?
     const user = await User.findOne({
       where: {
         email: req.body.email,
-      }
+      },
+      raw: true
     })
     if (!user) {
       return res.status(401).json({
@@ -55,7 +57,12 @@ module.exports = {
         {
           expiresIn: '1d',
         },
-      )
+      );
+      currentUser.setData({
+        email: getUser.email,
+        userId: getUser.id,
+        nom: getUser.nom
+      });
       res.status(200).json({
         token: jwtToken,
         expiresIn: 3600,

@@ -5,19 +5,38 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularMaterialModule } from './angular-material.module';
-import { SalaComponent } from './sala/sala.component';
-import { MissatgeComponent } from './missatge/missatge.component';
-import { AuthModule } from './auth/auth.module';
+import { AngularMaterialModule } from './angular-material/angular-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+import { AuthModule } from './auth/auth.module';
 import { AuthInterceptor } from './shared/authconfig.interceptor';
+import { XatComponent } from './xat/xat.component';
+import { environment } from 'src/environments/environment';
+
+const config: SocketIoConfig = {
+  url: environment.REST_SERVER_URL,
+  options: {
+    // transports: ['websocket'],
+    // //protocols: ["my-protocol-v1"],
+    // withCredentials: true,
+    // // //autoConnect: false,
+    // // //upgrade: true,
+    // query: {
+    //   'x-token': sessionStorage.getItem('access_token'),
+    // },
+
+    //   extraHeaders: {
+    //     Authorization: "Bearer "+sessionStorage.getItem('access_token')
+    //   }
+  },
+};
+
+//console.log('access_token',sessionStorage.getItem('access_token'));
+
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SalaComponent,
-    MissatgeComponent,
-  ],
+  declarations: [AppComponent, XatComponent], //SalaComponent, MissatgeComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -26,15 +45,16 @@ import { AuthInterceptor } from './shared/authconfig.interceptor';
     AngularMaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    AuthModule
+    AuthModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

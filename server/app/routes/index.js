@@ -20,7 +20,10 @@ module.exports = (app) => {
 
   app.use(cors());
   app.use(express.json());
-
+/*   app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-cache')
+    next() 
+  }); */
   // Enrutadors
   app.use('/sales', salesRoutes);
   app.use('/users', usersRoutes);

@@ -5,10 +5,10 @@ const authorize = require('../middlewares/auth');
 router.use(authorize);
 
 // crear missatge
-router.post("/", controllers.missatges.crearMissatge); // crear sala
+//router.post("/", controllers.missatges.crearMissatge); // crear sala
 
 // obtenir missatges de una sala
-router.get("/:salaId", controllers.missatges.obtenirMissatgesSala);
+//router.get("/:salaId", controllers.missatges.obtenirMissatgesSala);
 
 
 module.exports = router;
