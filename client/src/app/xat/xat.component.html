@@ -49,7 +49,7 @@
 
     <mat-divider></mat-divider>
     <mat-list dense class="conversation-history mat-typography" #scrollMe>
-      <mat-list-item *ngFor="let miss of llistaMissatges; index as i" [dir]="miss.userId === user.id ? 'rtl' : 'ltr'">
+      <mat-list-item *ngFor="let miss of llistaMissatges|async; index as i" [dir]="miss.userId === user.id ? 'rtl' : 'ltr'">
         <!-- <img *ngIf="event.type == 'text'" matListAvatar matTooltip="{{selectedConversation.members[event.from].user.name}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg" -->
         <!-- <img
           matListAvatar

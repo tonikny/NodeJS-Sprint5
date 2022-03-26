@@ -7,6 +7,7 @@ import { User } from '../shared/user';
 import { Missatge } from '../shared/missatge';
 // import { SocketService } from '../shared/socket.service';
 import { Sala } from '../shared/sala';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-xat',
@@ -17,8 +18,9 @@ export class XatComponent implements OnInit {
   user: User = new User();
   llistaSales: Sala[] = [];
   salaEscollida: Sala | undefined;
-  newMessage: Missatge = new Missatge();
-  llistaMissatges: Missatge[] = [];
+  newMessage: Missatge = {} as Missatge;
+  //llistaMissatges: Missatge[] = [];
+  llistaMissatges!: Observable<Missatge[]>;
 
   constructor(
     private salaService: SalaService,
@@ -27,7 +29,7 @@ export class XatComponent implements OnInit {
   ) {
     this.obtenirUser();
     //this.obtenirSales();
-    this.obtenirMissatges();
+    //this.obtenirMissatges();
     // this.missatgeService.getNewMessage()
     // .subscribe(data => this.llistaMissatges.push(data));
   }
@@ -36,6 +38,9 @@ export class XatComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.obtenirSales2();
+    this.llistaMissatges = this.missatgeService.missatges; // subscribe to entire collection
+    this.missatgeService.obtenirMissatges();    // load all missatges
+
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +91,7 @@ export class XatComponent implements OnInit {
     console.log('xat.component-sala escollida:', this.salaEscollida);
   }
   
-  async enviarMissatge(): Promise<void> {
+/*   async enviarMissatge(): Promise<void> {
     try {
       console.log('xat-sendMessage-newMessage', this.newMessage);
       if (!this.salaEscollida) {
@@ -103,9 +108,26 @@ export class XatComponent implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  } */
+  enviarMissatge(): void {
+    try {
+      console.log('xat-sendMessage-newMessage', this.newMessage);
+      if (!this.salaEscollida) {
+        throw new Error('No hi ha sala escollida');
+      }
+      if (this.newMessage.text) {  // No enviem missatges buits
+        this.missatgeService.enviaMissatge(
+          this.newMessage.text,
+          this.salaEscollida.id
+        );
+        this.newMessage.text = '';
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  async obtenirMissatges() {
+/*   async obtenirMissatges() {
     this.missatgeService.obtenirMissatges().subscribe({
       next: (llista: Missatge[]) => {
         console.log('xat.component-obtenirMissatges-getNewMessage', llista);
@@ -115,5 +137,5 @@ export class XatComponent implements OnInit {
       complete: () => console.log('Observer got a complete notification'),
     });
     console.log('xat.component-missatge-publicat:', this.llistaMissatges);
-  }
+  } */
 }
