@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Observable, take } from 'rxjs';
+
 import { MissatgeService } from '../missatge/missatge.service';
 import { SalaService } from '../sala/sala.service';
 import { AuthService } from '../shared/auth.service';
 import { User } from '../shared/user';
 import { Missatge } from '../shared/missatge';
-// import { SocketService } from '../shared/socket.service';
 import { Sala } from '../shared/sala';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-xat',
@@ -16,10 +15,10 @@ import { Observable } from 'rxjs';
 })
 export class XatComponent implements OnInit {
   user: User = new User();
-  llistaSales: Sala[] = [];
-  salaEscollida: Sala | undefined;
+  llistaSales!: Observable<Sala[]>;
+  salaActivaObs: Observable<Sala> | undefined;
+  salaActiva: Sala | undefined;
   newMessage: Missatge = {} as Missatge;
-  //llistaMissatges: Missatge[] = [];
   llistaMissatges!: Observable<Missatge[]>;
 
   constructor(
@@ -30,17 +29,19 @@ export class XatComponent implements OnInit {
     this.obtenirUser();
     //this.obtenirSales();
     //this.obtenirMissatges();
-    // this.missatgeService.getNewMessage()
-    // .subscribe(data => this.llistaMissatges.push(data));
+
   }
 
   //element.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  async ngOnInit(): Promise<void> {
-    await this.obtenirSales2();
-    this.llistaMissatges = this.missatgeService.missatges; // subscribe to entire collection
-    this.missatgeService.obtenirMissatges();    // load all missatges
+  ngOnInit(): void {
+    this.llistaSales = this.salaService.sales; // subscribe to entire collection
+    this.salaService.obtenirSales(); // load all sales
+    this.salaActivaObs = this.salaService.salaActivaObs; // subscribe to entire collection
 
+    //await this.obtenirSales2();
+    this.llistaMissatges = this.missatgeService.missatges; // subscribe to entire collection
+    this.missatgeService.obtenirMissatges(); // load all missatges
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -72,26 +73,29 @@ export class XatComponent implements OnInit {
   }
 
   obtenirSales() {
-    this.salaService.obtenirSales().subscribe((sales: Sala[]) => {
-      console.log('xat.component-onInit-sales:', sales);
-      this.llistaSales = sales;
-    });
+    this.salaService.obtenirSales();
+    console.log('xat.component-onInit-sales:', this.llistaSales);
   }
-  async obtenirSales2() {
+  /*   async obtenirSales2() {
     this.llistaSales = await this.salaService.obtenirSales2();
     console.log('xat.component-obtenir-sales:', this.llistaSales);
-  }
+  } */
 
   /* async escollirSala(salaId: any) {
     this.salaEscollida = await this.salaService.entrarASala(salaId);
     console.log('xat.component-sala escollida:', this.salaEscollida);
   } */
   async escollirSala(salaId: any) {
-    this.salaEscollida = await this.salaService.entrarASala(salaId);
-    console.log('xat.component-sala escollida:', this.salaEscollida);
+    this.salaService.entrarASala(salaId);
+    console.log('xat.component-sala escollida:', salaId);
+    /* this.salaActivaObs!.pipe(take(1)).subscribe((value) => {
+      //this.salaActiva = value;
+      console.log('value', value);
+      
+    }); */
   }
-  
-/*   async enviarMissatge(): Promise<void> {
+
+  /*   async enviarMissatge(): Promise<void> {
     try {
       console.log('xat-sendMessage-newMessage', this.newMessage);
       if (!this.salaEscollida) {
@@ -112,22 +116,28 @@ export class XatComponent implements OnInit {
   enviarMissatge(): void {
     try {
       console.log('xat-sendMessage-newMessage', this.newMessage);
-      if (!this.salaEscollida) {
+      if (this.salaService.salaActiva && this.salaService.salaActiva.id) {
+        if (this.newMessage.text) {
+          // No enviem missatges buits
+          //this.salaActiva.subscribe((data) => console.log('div',data));
+          // this.salaActivaObs!.pipe(take(1)).subscribe(value => {
+          //   this.salaActiva = value;
+          // });
+          this.missatgeService.enviaMissatge(
+            this.newMessage.text,
+            this.salaService.salaActiva.id
+          );
+          this.newMessage.text = '';
+        }
+      } else {
         throw new Error('No hi ha sala escollida');
-      }
-      if (this.newMessage.text) {  // No enviem missatges buits
-        this.missatgeService.enviaMissatge(
-          this.newMessage.text,
-          this.salaEscollida.id
-        );
-        this.newMessage.text = '';
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-/*   async obtenirMissatges() {
+  /*   async obtenirMissatges() {
     this.missatgeService.obtenirMissatges().subscribe({
       next: (llista: Missatge[]) => {
         console.log('xat.component-obtenirMissatges-getNewMessage', llista);

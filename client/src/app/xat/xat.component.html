@@ -2,26 +2,27 @@
   <mat-sidenav mode="side" opened>
     <mat-card>
       <!-- <mat-tab-group> -->
-        <!-- <mat-tab> -->
-          <mat-card-header>
-          <!-- <ng-template mat-tab-label> -->
-            <h2>Sales</h2>
-          <!-- </ng-template> -->
-        </mat-card-header>
-          <mat-list class="conversations">
-            <mat-list-item
-              *ngFor="let sala of llistaSales"
-              (click)="escollirSala(sala.id)"
-            >
-              <mat-icon matListIcon>forum</mat-icon>
-              <span>{{ sala.nom }} </span><!-- <mat-chip style="padding: 9px;">{{ sala.nombreUsuaris }}</mat-chip> -->
-            </mat-list-item>
-          </mat-list>
-        <!-- </mat-tab> -->
+      <!-- <mat-tab> -->
+      <mat-card-header>
+        <!-- <ng-template mat-tab-label> -->
+        <h2>Sales</h2>
+        <!-- </ng-template> -->
+      </mat-card-header>
+      <mat-list class="conversations">
+        <mat-list-item
+          *ngFor="let sala of llistaSales | async"
+          (click)="escollirSala(sala.id)"
+        >
+          <mat-icon matListIcon>forum</mat-icon>
+          <span>{{ sala.nom }} </span
+          ><!-- <mat-chip style="padding: 9px;">{{ sala.nombreUsuaris }}</mat-chip> -->
+        </mat-list-item>
+      </mat-list>
+      <!-- </mat-tab> -->
       <!-- </mat-tab-group> -->
     </mat-card>
   </mat-sidenav>
-  <mat-sidenav position="end" mode="side" opened *ngIf="salaEscollida">
+  <mat-sidenav position="end" mode="side" opened *ngIf="salaActiva">
     <mat-card>
       <mat-list class="members">
         <mat-list-item>
@@ -31,14 +32,14 @@
       </mat-list>
     </mat-card>
   </mat-sidenav>
-  <section class="empty-conversation" *ngIf="!salaEscollida">
+  <section class="empty-conversation" *ngIf="!salaActiva">
     <h2 class="mat-display-1">Escull la sala on vols entrar a l'esquerra</h2>
   </section>
-  <section *ngIf="salaEscollida">
+  <section *ngIf="salaActiva">
     <div class="mat-typography conversation-header">
       <h2>
         <mat-icon>forum</mat-icon>
-        &nbsp; {{ salaEscollida.nom }}
+        &nbsp; {{ salaActiva.nom }}
       </h2>
       <!-- <p>
         <mat-icon>account_circle</mat-icon>
@@ -49,7 +50,10 @@
 
     <mat-divider></mat-divider>
     <mat-list dense class="conversation-history mat-typography" #scrollMe>
-      <mat-list-item *ngFor="let miss of llistaMissatges|async; index as i" [dir]="miss.userId === user.id ? 'rtl' : 'ltr'">
+      <mat-list-item
+        *ngFor="let miss of llistaMissatges | async; index as i"
+        [dir]="miss.userId === user.id ? 'rtl' : 'ltr'"
+      >
         <!-- <img *ngIf="event.type == 'text'" matListAvatar matTooltip="{{selectedConversation.members[event.from].user.name}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg" -->
         <!-- <img
           matListAvatar
@@ -60,9 +64,17 @@
           <b>{{selectedConversation.members[event.from].user.name}}</b> has joined the conversation</p> -->
         <p [dir]="'ltr'"></p>
         <!-- <p class="text-center"><b></b> ha entrat a la sala</p> -->
-        <p class="text-center" [ngStyle]="{'background-color': (miss.userId === user.id) ? 'rgba(255, 160, 122, 0.7)' : 'rgba(255, 160, 122, 0.4)' }"
-        style="border-radius:10px 20px; width: 60%; font-size:medium;"> 
-          {{miss.text}}
+        <p
+          class="text-center"
+          [ngStyle]="{
+            'background-color':
+              miss.userId === user.id
+                ? 'rgba(255, 160, 122, 0.7)'
+                : 'rgba(255, 160, 122, 0.4)'
+          }"
+          style="border-radius: 10px 20px; width: 60%; font-size: medium"
+        >
+          {{ miss.text }}
         </p>
       </mat-list-item>
     </mat-list>
@@ -78,7 +90,7 @@
           matInput
           placeholder="Start chatting..."
           [(ngModel)]="newMessage.text"
-          (keyup)="$event.keyCode == 13 && enviarMissatge()"
+          (keyup)="$event.keyCode === 13 && enviarMissatge()"
         />
         <mat-icon matSuffix (click)="enviarMissatge()">send</mat-icon>
       </mat-form-field>

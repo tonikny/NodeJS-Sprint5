@@ -67,7 +67,7 @@ const initSocket = (httpServer) => {
 
 
     // subscribe person to chat & other user as well
-    socket.on("entra", async (salaId) => {
+    socket.on("entra_sala", async (salaId) => {
       console.log('socket-on.entra');
       try {
         const user = currentUser.getData();
@@ -82,12 +82,12 @@ const initSocket = (httpServer) => {
           socket.leave(salaId.toString());  
         }
         safeJoin(salaId.toString());
-        socket.emit('sala', sala);
+        socket.emit('sala_escollida', sala);
       } catch (e) {
         console.log('Error entrant a sala', e);
       }
       socket.join(salaId.toString());
-      io.emit('llista_sales', await salesService.obtenirSales());
+      //io.emit('llista_sales', await salesService.obtenirSales());
       io.to(salaId.toString()).emit('llista_missatges', await missatgesService.obtenirMissatgesSala(salaId));
     });
 

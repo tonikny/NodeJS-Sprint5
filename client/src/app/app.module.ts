@@ -36,7 +36,7 @@ const config: SocketIoConfig = {
 
 
 @NgModule({
-  declarations: [AppComponent, XatComponent], //SalaComponent, MissatgeComponent],
+  declarations: [AppComponent, XatComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
