@@ -30,7 +30,8 @@
         },
         "@schematics/angular:service": {
           "skipTests": true
-        },        "@schematics/angular:application": {
+        },
+        "@schematics/angular:application": {
           "strict": true
         }
       },
@@ -126,9 +127,21 @@
             ],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "client"
+  "defaultProject": "client",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }

@@ -60,14 +60,20 @@ const initSocket = (httpServer) => {
 
     const llista = await salesService.obtenirSales();
     io.emit('llista_sales_resp', await salesService.obtenirSales());
- /*    socket.on("llista_sales", async () => {
-      const llista = await salesService.obtenirSales();
-      io.emit('llista_sales_resp', llista);
-    }); */
+    /*    socket.on("llista_sales", async () => {
+         const llista = await salesService.obtenirSales();
+         io.emit('llista_sales_resp', llista);
+       }); */
+
+    socket.on('crea_sala', async (nom) => {
+      const userId = currentUser.getData().userId;
+      const sala = await salesService.crearSala(userId, nom);
+      io.emit('sala_creada_resp', sala);
+    });
 
 
     // subscribe person to chat & other user as well
-    socket.on("entra", async (salaId) => {
+    socket.on("entra_sala", async (salaId) => {
       console.log('socket-on.entra');
       try {
         const user = currentUser.getData();
@@ -79,15 +85,16 @@ const initSocket = (httpServer) => {
 
         if (previousSalaId) {
           io.to(salaId.toString()).emit('usuari_surt', socket.id);
-          socket.leave(salaId.toString());  
+          socket.leave(salaId.toString());
         }
         safeJoin(salaId.toString());
-        socket.emit('sala', sala);
+        //console.log('Entrant a sala', sala);
+        socket.emit('sala_escollida', sala);
       } catch (e) {
         console.log('Error entrant a sala', e);
       }
       socket.join(salaId.toString());
-      io.emit('llista_sales', await salesService.obtenirSales());
+      //io.emit('llista_sales', await salesService.obtenirSales());
       io.to(salaId.toString()).emit('llista_missatges', await missatgesService.obtenirMissatgesSala(salaId));
     });
 

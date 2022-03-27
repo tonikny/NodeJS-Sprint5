@@ -11,11 +11,11 @@ module.exports = {
           model: models.User, attributes: []
         }],
         group: ['id'],
-        raw:true
+        raw: true
       });
       //this.sales.map(o => { console.log('---', o.dataValues) });
       this.sales = sales;
-      console.log('-------Sales----------->',this.sales.map(o=>o.nom));
+      console.log('-------Sales----------->', this.sales.map(o => o.nom));
       return this.sales;
     }
     catch (e) {
@@ -24,21 +24,25 @@ module.exports = {
   },
 
   // crear sala
-  crearSala: async(nom, userId) =>{
+  crearSala: async (userId, nom) => {
     try {
       const sala = models.Sala.build({
         nom: nom,
         creadaPer: userId
       });
-      await sala.save();
+      return await sala.save();
     } catch (e) {
-      console.error('Error db creant sala', e.original);
-      throw (e);
+      if (e.code === 'ER_DUP_ENTRY') {
+        console.error('Nom de sala duplicat');
+      } else {
+        console.error('Error db creant sala', e.original);
+        throw (e);
+      }
     }
   },
 
   // entrar a sala
-  entrarASala: async(userId, salaId) =>{
+  entrarASala: async (userId, salaId) => {
     console.log('Usuari ' + userId + ' entra a Sala ' + salaId);
     try {
       await models.User.update({ connectatASala: salaId }, {
@@ -46,7 +50,7 @@ module.exports = {
           id: userId
         }
       });
-      const sala = await models.Sala.findByPk(salaId, {raw:true});
+      const sala = await models.Sala.findByPk(salaId, { raw: true });
       return sala;
     } catch (e) {
       console.error('Error db entrant a sala', e.original);
@@ -55,7 +59,7 @@ module.exports = {
   },
 
   // sortir de sala
-  sortirDeSala: async(id)=> {
+  sortirDeSala: async (id) => {
     try {
       await models.User.update({ connectatASala: null }, {
         where: {

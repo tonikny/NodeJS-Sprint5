@@ -18,7 +18,10 @@ export class MissatgeService {
   readonly missatges = this._missatges.asObservable();
 
 
-  constructor(private authService: AuthService, private socket: Socket) {}
+  constructor(private authService: AuthService, private socket: Socket) {
+    this.eventMissatgeRebut();
+
+  }
 
   /* public async enviaMissatge(messageText: any, salaId: number) {
     const userId = this.authService.getUserTokenData().userId;
@@ -41,12 +44,15 @@ export class MissatgeService {
 
     this.socket.emit('nou_missatge', message);
     console.log('missatge.service - sendMessage:', message);
+  }
+
+  eventMissatgeRebut() {
     this.socket.fromEvent<Missatge>('nou_missatge_resp').subscribe({
       next: (data) => {
         this.dataStore.missatges.push(data);
         this._missatges.next(Object.assign({}, this.dataStore).missatges);
       },
-      error: () => console.log('Could not create todo.'),
+      error: () => console.log('No s\'ha pogut enviar el missatge.'),
     });
   }
 
@@ -71,6 +77,7 @@ export class MissatgeService {
       next: (data: any) => {
         this.dataStore.missatges = data;
         this._missatges.next(Object.assign({}, this.dataStore).missatges);
+        //this._missatges.next(this.dataStore.missatges.map(obj => ({...obj})));
       },
       error: () => console.log("No s'han pogut carregar els missatges."),
     });
