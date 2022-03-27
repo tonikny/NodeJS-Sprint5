@@ -16,10 +16,12 @@ import { Sala } from '../shared/sala';
 export class XatComponent implements OnInit {
   user: User = new User();
   llistaSales!: Observable<Sala[]>;
-  salaActivaObs: Observable<Sala> | undefined;
+  salaActivaObs = new Observable<Sala>();
   salaActiva: Sala | undefined;
   newMessage: Missatge = {} as Missatge;
   llistaMissatges!: Observable<Missatge[]>;
+  mostraInput = false;
+  nomSalaNova = '';
 
   constructor(
     private salaService: SalaService,
@@ -29,7 +31,6 @@ export class XatComponent implements OnInit {
     this.obtenirUser();
     //this.obtenirSales();
     //this.obtenirMissatges();
-
   }
 
   //element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -53,7 +54,7 @@ export class XatComponent implements OnInit {
   eventLlistaMissatges() {}
 
   ////////////////////////////////////////////////////////////////////////////////////
-  crearSala() {}
+  _crearSala() {}
   entrarASala() {}
   _llistaSales() {}
   _enviarMissatge() {}
@@ -76,16 +77,18 @@ export class XatComponent implements OnInit {
     this.salaService.obtenirSales();
     console.log('xat.component-onInit-sales:', this.llistaSales);
   }
-  /*   async obtenirSales2() {
-    this.llistaSales = await this.salaService.obtenirSales2();
-    console.log('xat.component-obtenir-sales:', this.llistaSales);
-  } */
 
-  /* async escollirSala(salaId: any) {
-    this.salaEscollida = await this.salaService.entrarASala(salaId);
-    console.log('xat.component-sala escollida:', this.salaEscollida);
-  } */
-  async escollirSala(salaId: any) {
+  crearSala() {
+    console.log('this.nomSalaNova', this.nomSalaNova);
+    if (this.nomSalaNova) {
+      console.log('this.nomSalaNova-notnull', this.nomSalaNova);
+      this.salaService.crearSala(this.nomSalaNova);
+      this.nomSalaNova = '';
+      this.mostraInput = false;
+    }
+  }
+
+  escollirSala(salaId: any) {
     this.salaService.entrarASala(salaId);
     console.log('xat.component-sala escollida:', salaId);
     /* this.salaActivaObs!.pipe(take(1)).subscribe((value) => {
@@ -95,34 +98,12 @@ export class XatComponent implements OnInit {
     }); */
   }
 
-  /*   async enviarMissatge(): Promise<void> {
-    try {
-      console.log('xat-sendMessage-newMessage', this.newMessage);
-      if (!this.salaEscollida) {
-        throw new Error('No hi ha sala escollida');
-      }
-      if (this.newMessage.text) {
-        const m: Missatge = await this.missatgeService.enviaMissatge(
-          this.newMessage.text,
-          this.salaEscollida.id
-        );
-        this.llistaMissatges.push(m);
-        this.newMessage.text = '';
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  } */
   enviarMissatge(): void {
     try {
       console.log('xat-sendMessage-newMessage', this.newMessage);
       if (this.salaService.salaActiva && this.salaService.salaActiva.id) {
+        // No enviem missatges buits
         if (this.newMessage.text) {
-          // No enviem missatges buits
-          //this.salaActiva.subscribe((data) => console.log('div',data));
-          // this.salaActivaObs!.pipe(take(1)).subscribe(value => {
-          //   this.salaActiva = value;
-          // });
           this.missatgeService.enviaMissatge(
             this.newMessage.text,
             this.salaService.salaActiva.id
@@ -136,16 +117,4 @@ export class XatComponent implements OnInit {
       console.log(error);
     }
   }
-
-  /*   async obtenirMissatges() {
-    this.missatgeService.obtenirMissatges().subscribe({
-      next: (llista: Missatge[]) => {
-        console.log('xat.component-obtenirMissatges-getNewMessage', llista);
-        this.llistaMissatges = llista;
-      },
-      error: (err) => console.error('Observer got an error: ' + err),
-      complete: () => console.log('Observer got a complete notification'),
-    });
-    console.log('xat.component-missatge-publicat:', this.llistaMissatges);
-  } */
 }

@@ -1,6 +1,4 @@
-- Canviar nom i posició de mètodes al component Xat, comprovar que es carreguen els missatges a temps real
 - Scroll de missatges
-- Crear sala
 - Eliminar endpoints sobrants
 - Cookies per sessions de servidor
 - Mostrar events al Xat

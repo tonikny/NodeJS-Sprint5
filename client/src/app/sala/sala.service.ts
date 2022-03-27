@@ -20,22 +20,22 @@ export class SalaService {
   salaActivaObs = this._salaActiva.asObservable();
   salaActiva: Sala | undefined;
 
-
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private socket: Socket
   ) {
     this.eventEntraASala();
+    this.eventSalaCreada();
   }
-
 
   public entrarASala(salaId: number): void {
     const userId = this.authService.getUserTokenData().userId;
-    this.salaActivaObs.pipe(take(1)).subscribe((value) => {
+    //this.salaActivaObs.pipe(take(1)).subscribe((value) => {
+    this.salaActivaObs.subscribe((value) => {
       this.salaActiva = value;
     });
-    console.log('sala.service - salaActiva', this.salaActiva);      
+    console.log('sala.service - salaActiva', this.salaActiva);
     if (userId) {
       console.log('sala.service - entra:', salaId, parseInt(userId));
       this.socket.emit('entra_sala', salaId.toString());
@@ -50,7 +50,7 @@ export class SalaService {
         this.salaActiva = data;
         this._salaActiva.next(data);
         //this._salaActiva.complete();
-        console.log('sala.service-salaActiva', this.salaActiva);
+        console.log('sala.service-Event-salaActiva', this.salaActiva);
       },
       error: () => console.log("No s'ha pogut entrar a la sala."),
     });
@@ -67,25 +67,17 @@ export class SalaService {
     });
   }
 
-  /* load(id: number | string) {
-    this.http.get<Todo>(`${this.baseUrl}/todos/${id}`).subscribe(
-      data => {
-        let notFound = true;
+  crearSala(nom: string) {
+    this.socket.emit('crea_sala', nom);
+  }
 
-        this.dataStore.todos.forEach((item, index) => {
-          if (item.id === data.id) {
-            this.dataStore.todos[index] = data;
-            notFound = false;
-          }
-        });
-
-        if (notFound) {
-          this.dataStore.todos.push(data);
-        }
-
-        this._todos.next(Object.assign({}, this.dataStore).todos);
+  eventSalaCreada() {
+    this.socket.fromEvent<Sala>('sala_creada_resp').subscribe({
+      next: (data: any) => {
+        this.llistaSales.push(data);
+        this._sales.next(this.llistaSales.map((obj) => ({ ...obj })));
       },
-      error => console.log('Could not load todo.')
-    );
-  } */
+      error: () => console.log("No s'ha pogut crear la sala."),
+    });
+  }
 }
