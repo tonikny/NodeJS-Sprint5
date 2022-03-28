@@ -90,7 +90,7 @@ export class AuthService {
     let api = `${this.endpoint}/users/${id}`;
     return this.http.get(api).pipe(
       map((res) => {
-        // console.log('res', res);
+        console.log('res', res);
         return res;
       }),
       catchError(this.handleError)

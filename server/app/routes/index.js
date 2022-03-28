@@ -20,12 +20,9 @@ module.exports = (app) => {
 
   app.use(cors());
   app.use(express.json());
-/*   app.use((req, res, next) => {
-    res.set('Cache-Control', 'no-cache')
-    next() 
-  }); */
+
   // Enrutadors
-  app.use('/sales', salesRoutes);
+  //app.use('/sales', salesRoutes);
   app.use('/users', usersRoutes);
   app.use('/', authRoutes);
 
@@ -33,7 +30,7 @@ module.exports = (app) => {
   app.use('*', (req, res) => {
     return res.status(404).json({
       success: false,
-      message: 'API endpoint doesn\'t exist'
+      message: 'No existeix aquest endpoint a l\'API'
     })
   });
 

@@ -73,7 +73,7 @@ const initSocket = (httpServer) => {
 
     // subscribe person to chat & other user as well
     socket.on("entra_sala", async (userId, salaId) => {
-      console.log('socket-on.entra');
+      console.log('socket-on.entra',userId, salaId);
       try {
         // const user = currentUser.getData();
         // const userId = user.userId;
@@ -95,7 +95,7 @@ const initSocket = (httpServer) => {
       socket.join(salaId.toString());
       //io.emit('llista_sales', await salesService.obtenirSales());
       io.to(salaId.toString()).emit('llista_missatges', await missatgesService.obtenirMissatgesSala(salaId));
-      io.emit('llista_usuaris', await usersService.obtenirUsuarisSala(salaId));
+      io.emit('llista_usuaris', await usersService.obtenirUsers());
     });
 
     socket.on('nou_missatge', async (message) => {

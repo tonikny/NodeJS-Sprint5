@@ -51,7 +51,11 @@
     <mat-card>
       <mat-list class="members">
         <mat-list-item *ngFor="let user of llistaUsuaris | async">
-          <p [ngStyle]="{'font-weight':user.id === usuari.id ? 'bold': 'normal'}">{{ user.nom }}</p>
+          <p *ngIf="(salaActivaObs | async)?.id===user.connectatASala"
+          [ngStyle]="{'font-weight':user.id === usuari.id ? 'bold': 'normal'}"
+          >
+          {{ user.nom }}
+        </p>
         </mat-list-item>
       </mat-list>
     </mat-card>
