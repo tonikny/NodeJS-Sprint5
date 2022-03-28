@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable, take } from 'rxjs';
 
-import { MissatgeService } from '../missatge/missatge.service';
-import { SalaService } from '../sala/sala.service';
-import { AuthService } from '../shared/auth.service';
-import { User } from '../shared/user';
-import { Missatge } from '../shared/missatge';
-import { Sala } from '../shared/sala';
+import { MissatgeService } from '../services/missatge.service';
+import { SalaService } from '../services/sala.service';
+import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
+import { User } from '../models/user';
+import { Missatge } from '../models/missatge';
+import { Sala } from '../models/sala';
 
 @Component({
   selector: 'app-xat',
@@ -14,19 +15,24 @@ import { Sala } from '../shared/sala';
   styleUrls: ['./xat.component.scss'],
 })
 export class XatComponent implements OnInit {
-  user: User = new User();
+  @ViewChild('scrollMe', {static: false})
+  private scrollContainer: ElementRef | undefined;
+
+  usuari!: User;
   llistaSales!: Observable<Sala[]>;
   salaActivaObs = new Observable<Sala>();
   salaActiva: Sala | undefined;
   newMessage: Missatge = {} as Missatge;
   llistaMissatges!: Observable<Missatge[]>;
+  llistaUsuaris!: Observable<User[]>;
   mostraInput = false;
   nomSalaNova = '';
 
   constructor(
     private salaService: SalaService,
     private missatgeService: MissatgeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     this.obtenirUser();
     //this.obtenirSales();
@@ -40,26 +46,12 @@ export class XatComponent implements OnInit {
     this.salaService.obtenirSales(); // load all sales
     this.salaActivaObs = this.salaService.salaActivaObs; // subscribe to entire collection
 
-    //await this.obtenirSales2();
     this.llistaMissatges = this.missatgeService.missatges; // subscribe to entire collection
     this.missatgeService.obtenirMissatges(); // load all missatges
+
+    this.llistaUsuaris = this.userService.usuaris; // subscribe to entire collection
+    this.userService.obtenirUsuaris(); // load all usuaris
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  eventEntraASala() {}
-  eventSurtSala() {}
-  eventSalaCreada() {}
-  eventLlistaSales() {}
-  eventMissatgeRebut() {}
-  eventLlistaMissatges() {}
-
-  ////////////////////////////////////////////////////////////////////////////////////
-  _crearSala() {}
-  entrarASala() {}
-  _llistaSales() {}
-  _enviarMissatge() {}
-  _llistaMissatges() {}
-  ////////////////////////////////////////////////////////////////////////////////////
 
   obtenirUser() {
     const token = this.authService.getUserTokenData();
@@ -69,7 +61,7 @@ export class XatComponent implements OnInit {
     this.authService.getUser(userId).subscribe((user: any) => {
       console.log('user:', user);
 
-      this.user = user;
+      this.usuari = user;
     });
   }
 
@@ -91,11 +83,15 @@ export class XatComponent implements OnInit {
   escollirSala(salaId: any) {
     this.salaService.entrarASala(salaId);
     console.log('xat.component-sala escollida:', salaId);
+    this.userService.obtenirUsuaris();
+    console.log(this.llistaUsuaris);
+    
     /* this.salaActivaObs!.pipe(take(1)).subscribe((value) => {
       //this.salaActiva = value;
-      console.log('value', value);
-      
+      console.log('value', value);      
     }); */
+    //this.scrollToElement();
+
   }
 
   enviarMissatge(): void {
@@ -110,11 +106,22 @@ export class XatComponent implements OnInit {
           );
           this.newMessage.text = '';
         }
+        //this.scrollToElement();
       } else {
         throw new Error('No hi ha sala escollida');
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  scrollToElement(): void {
+    if (this.scrollContainer) {
+      this.scrollContainer.nativeElement.scrollMe({
+        top: this.scrollContainer.nativeElement.scrollHeight,
+        left: 0,
+        behavior: 'smooth',
+      });
     }
   }
 }

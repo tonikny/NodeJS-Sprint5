@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from 'src/app/shared/auth.service';
-import { User } from 'src/app/shared/user';
+import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
-export class UserComponent implements OnInit {
-  currentUser = new User();
+export class UserComponent {
+  currentUser!: User;
 
   constructor(
     public authService: AuthService,
@@ -21,7 +21,5 @@ export class UserComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
 
 }

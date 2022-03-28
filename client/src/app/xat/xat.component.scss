@@ -31,7 +31,7 @@
 
 .conversation-history.mat-list {
   height: calc(100% - 180px);
-  overflow-x: scroll;
+  overflow: scroll;
   position: absolute;
   width: 100%;
 }
@@ -84,3 +84,8 @@ section .mat-list .mat-list-avatar{
 .mat-sidenav {
   width: 25%;
 }
+
+/* #scrollMe {
+  height: 200px;
+  overflow: scroll;
+} */

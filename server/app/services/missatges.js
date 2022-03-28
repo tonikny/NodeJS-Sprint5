@@ -11,7 +11,8 @@ class MissatgesService {
       order: [
         ['createdAt']
       ],
-      limit: 50
+      limit: 50,
+      raw: true
     });
     return missatges;
   }

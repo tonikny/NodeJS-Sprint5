@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, catchError, retry, take } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
-import { Sala } from '../shared/sala';
+import { BehaviorSubject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
-import { AuthService } from '../shared/auth.service';
+
+import { Sala } from '../models/sala';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -57,7 +56,7 @@ export class SalaService {
   }
 
   public obtenirSales(): void {
-    console.log('missatge.service - obtenirSales ...');
+    console.log('sala.service - obtenirSales ...');
     this.socket.fromEvent<Sala[]>('llista_sales_resp').subscribe({
       next: (data: any) => {
         this.llistaSales = data;

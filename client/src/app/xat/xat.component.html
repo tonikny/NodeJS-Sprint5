@@ -50,9 +50,8 @@
   >
     <mat-card>
       <mat-list class="members">
-        <mat-list-item>
-          <!-- *ngFor="let member of selectedConversation.members | keys"> -->
-          <p>{{ user.nom }}</p>
+        <mat-list-item *ngFor="let user of llistaUsuaris | async">
+          <p [ngStyle]="{'font-weight':user.id === usuari.id ? 'bold': 'normal'}">{{ user.nom }}</p>
         </mat-list-item>
       </mat-list>
     </mat-card>
@@ -77,7 +76,7 @@
     <mat-list dense class="conversation-history mat-typography" #scrollMe>
       <mat-list-item
         *ngFor="let miss of llistaMissatges | async; index as i"
-        [dir]="miss.userId === user.id ? 'rtl' : 'ltr'"
+        [dir]="miss.userId === usuari.id ? 'rtl' : 'ltr'"
       >
         <!-- <img *ngIf="event.type == 'text'" matListAvatar matTooltip="{{selectedConversation.members[event.from].user.name}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg" -->
         <!-- <img
@@ -93,7 +92,7 @@
           class="text-center"
           [ngStyle]="{
             'background-color':
-              miss.userId === user.id
+              miss.userId === usuari.id
                 ? 'rgba(255, 160, 122, 0.7)'
                 : 'rgba(255, 160, 122, 0.4)'
           }"

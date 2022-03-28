@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { io } from 'socket.io-client';
-import { environment } from '../../environments/environment';
-import { Missatge } from '../shared/missatge';
-//import { SocketService } from '../shared/NO_socket.service';
+import { BehaviorSubject } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
-import { AuthService } from '../shared/auth.service';
+
+import { Missatge } from '../models/missatge';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',

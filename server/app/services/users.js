@@ -41,6 +41,20 @@ class UserService {
     }
     catch (e) { throw (e) }
   }
+
+  static async obtenirUsuarisSala(salaId) {
+    const users = await models.User.findAll({
+      where: {
+        connectatASala: salaId
+      },
+      order: [
+        ['updatedAt']
+      ],
+      raw: true
+    });
+    return users;
+  }
+
 }
 
 module.exports = UserService;

@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/shared/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   loginForm: FormGroup;
 
   constructor(
@@ -21,8 +21,6 @@ export class LoginComponent implements OnInit {
       password: [''],
     });
   }
-
-  ngOnInit() :void {}
   
   loginUser() {
     this.authService.login(this.loginForm.value);

@@ -96,6 +96,7 @@ const initSocket = (httpServer) => {
       socket.join(salaId.toString());
       //io.emit('llista_sales', await salesService.obtenirSales());
       io.to(salaId.toString()).emit('llista_missatges', await missatgesService.obtenirMissatgesSala(salaId));
+      io.emit('llista_usuaris', await usersService.obtenirUsuarisSala(salaId));
     });
 
     socket.on('nou_missatge', async (message) => {
