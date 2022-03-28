@@ -65,26 +65,25 @@ const initSocket = (httpServer) => {
          io.emit('llista_sales_resp', llista);
        }); */
 
-    socket.on('crea_sala', async (nom) => {
-      const userId = currentUser.getData().userId;
+    socket.on('crea_sala', async (userId, nom) => {
+      //const userId = currentUser.getData().userId;
       const sala = await salesService.crearSala(userId, nom);
       io.emit('sala_creada_resp', sala);
     });
 
-
     // subscribe person to chat & other user as well
-    socket.on("entra_sala", async (salaId) => {
+    socket.on("entra_sala", async (userId, salaId) => {
       console.log('socket-on.entra');
       try {
-        const user = currentUser.getData();
-        const userId = user.userId;
+        // const user = currentUser.getData();
+        // const userId = user.userId;
         //const userId = authService.getSessionUser();
         if (!userId) throw new Error('No hi ha userId');
         const sala = await salesService.entrarASala(userId, salaId);
         if (!sala) throw new Error('No hi ha sala');
 
         if (previousSalaId) {
-          io.to(salaId.toString()).emit('usuari_surt', socket.id);
+          //io.to(salaId.toString()).emit('usuari_surt', socket.id);
           socket.leave(salaId.toString());
         }
         safeJoin(salaId.toString());

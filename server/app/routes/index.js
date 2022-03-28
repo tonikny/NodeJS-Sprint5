@@ -33,7 +33,7 @@ module.exports = (app) => {
   app.use('*', (req, res) => {
     return res.status(404).json({
       success: false,
-      message: 'API endpoint doesnt exist'
+      message: 'API endpoint doesn\'t exist'
     })
   });
 

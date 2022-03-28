@@ -45,7 +45,7 @@ module.exports = {
   entrarASala: async (userId, salaId) => {
     console.log('Usuari ' + userId + ' entra a Sala ' + salaId);
     try {
-      await models.User.update({ connectatASala: salaId }, {
+      const res = await models.User.update({ connectatASala: salaId }, {
         where: {
           id: userId
         }
@@ -59,7 +59,7 @@ module.exports = {
   },
 
   // sortir de sala
-  sortirDeSala: async (id) => {
+  /* sortirDeSala: async (id) => {
     try {
       await models.User.update({ connectatASala: null }, {
         where: {
@@ -70,6 +70,6 @@ module.exports = {
       console.error('Error db sortint de sala', e.original);
       throw (e);
     }
-  }
+  } */
 
 }

@@ -58,11 +58,11 @@ module.exports = {
           expiresIn: '1d',
         },
       );
-      currentUser.setData({
+      /* currentUser.setData({
         email: getUser.email,
         userId: getUser.id,
         nom: getUser.nom
-      });
+      }); */
       res.status(200).json({
         token: jwtToken,
         expiresIn: 3600,

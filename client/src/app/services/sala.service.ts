@@ -28,24 +28,26 @@ export class SalaService {
     this.eventSalaCreada();
   }
 
-  public entrarASala(salaId: number): void {
-    const userId = this.authService.getUserTokenData().userId;
+  public entrarASala(userId: number, salaId: number): void {
+    //const userId = this.authService.getUserTokenData().userId;
     //this.salaActivaObs.pipe(take(1)).subscribe((value) => {
     this.salaActivaObs.subscribe((value) => {
       this.salaActiva = value;
     });
     console.log('sala.service - salaActiva', this.salaActiva);
     if (userId) {
-      console.log('sala.service - entra:', salaId, parseInt(userId));
-      this.socket.emit('entra_sala', salaId.toString());
+      console.log('sala.service - entra:', salaId, userId);
+      this.socket.emit('entra_sala', userId, salaId.toString());
     } else {
       throw new Error('sala.service: No hi ha userId a sessionstorage');
     }
   }
 
   eventEntraASala() {
+    //const userId = this.authService.getUserTokenData().userId;
     this.socket.fromEvent<Sala>('sala_escollida').subscribe({
       next: (data: any) => {
+        console.log('eventEntraASala-data',data);
         this.salaActiva = data;
         this._salaActiva.next(data);
         //this._salaActiva.complete();
@@ -66,8 +68,8 @@ export class SalaService {
     });
   }
 
-  crearSala(nom: string) {
-    this.socket.emit('crea_sala', nom);
+  crearSala(userId: number, nom: string) {
+    this.socket.emit('crea_sala', userId, nom);
   }
 
   eventSalaCreada() {

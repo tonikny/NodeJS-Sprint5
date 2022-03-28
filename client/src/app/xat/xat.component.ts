@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable, take } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { MissatgeService } from '../services/missatge.service';
 import { SalaService } from '../services/sala.service';
@@ -29,6 +30,7 @@ export class XatComponent implements OnInit {
   nomSalaNova = '';
 
   constructor(
+    private router: Router,
     private salaService: SalaService,
     private missatgeService: MissatgeService,
     private authService: AuthService,
@@ -58,11 +60,16 @@ export class XatComponent implements OnInit {
     console.log('obtenirUser-token', token);
     const userId = token.userId;
     //const userId = sessionStorage.getItem('userId')
-    this.authService.getUser(userId).subscribe((user: any) => {
+    this.authService.getUser(userId).pipe(take(1)).subscribe({
+      next: (user: any) => {
       console.log('user:', user);
-
       this.usuari = user;
-    });
+    },
+    error: () => {
+      console.log("No s'ha pogut obtenir l'usuari!!");
+      this.authService.doLogout();
+    }
+  });
   }
 
   obtenirSales() {
@@ -74,14 +81,14 @@ export class XatComponent implements OnInit {
     console.log('this.nomSalaNova', this.nomSalaNova);
     if (this.nomSalaNova) {
       console.log('this.nomSalaNova-notnull', this.nomSalaNova);
-      this.salaService.crearSala(this.nomSalaNova);
+      this.salaService.crearSala(this.usuari.id!, this.nomSalaNova);
       this.nomSalaNova = '';
       this.mostraInput = false;
     }
   }
 
   escollirSala(salaId: any) {
-    this.salaService.entrarASala(salaId);
+    this.salaService.entrarASala(this.usuari.id!, salaId);
     console.log('xat.component-sala escollida:', salaId);
     this.userService.obtenirUsuaris();
     console.log(this.llistaUsuaris);
@@ -101,6 +108,7 @@ export class XatComponent implements OnInit {
         // No enviem missatges buits
         if (this.newMessage.text) {
           this.missatgeService.enviaMissatge(
+            this.usuari.id!,
             this.newMessage.text,
             this.salaService.salaActiva.id
           );
@@ -109,6 +117,7 @@ export class XatComponent implements OnInit {
         //this.scrollToElement();
       } else {
         throw new Error('No hi ha sala escollida');
+        
       }
     } catch (error) {
       console.log(error);

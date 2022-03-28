@@ -1,4 +1,4 @@
-//const authService = require('../services/auth')
+/* //const authService = require('../services/auth')
 const jwt = require("jsonwebtoken");
 const { jwtSecretToken } = require("../config/config");
 
@@ -16,14 +16,14 @@ class CurrentUser {
     this.data = Object.assign({}, obj);
   }
 
-/*   setDataFromToken(token) {
-    const d = this.decodeToken(token);
-    this.data = {userId: d.userId, nom: d.nom, email: d.email};
-  } */
+  // setDataFromToken(token) {
+  //   const d = this.decodeToken(token);
+  //   this.data = {userId: d.userId, nom: d.nom, email: d.email};
+  // }
   setDataFromToken(token) {
     const d = jwt.decode(token, jwtSecretToken.token);    
     this.data = {userId: d.userId, nom: d.nom, email: d.email};
   }
 }
 
-module.exports = new CurrentUser();
+module.exports = new CurrentUser(); */

@@ -33,12 +33,12 @@ export class MissatgeService {
     console.log('missatge.service - sendMessage:', message);
     return await this.socket.fromOneTimeEvent<Missatge>('nou_missatge_resp');
   } */
-  public enviaMissatge(messageText: any, salaId: number): void {
-    const userId = this.authService.getUserTokenData().userId;
+  public enviaMissatge(userId: number, messageText: any, salaId: number): void {
+    //const userId = this.authService.getUserTokenData().userId;
     const message: Missatge = {} as Missatge;
     message.text = messageText;
     message.salaId = salaId;
-    message.userId = parseInt(userId!);
+    message.userId = userId!;
 
     this.socket.emit('nou_missatge', message);
     console.log('missatge.service - sendMessage:', message);

@@ -5,7 +5,7 @@ const authorize = require('../middlewares/auth');
 router.use(authorize);
 
 // crear sala
-router.post("/", controllers.sales.crearSala);
+//router.post("/", controllers.sales.crearSala);
 
 // entrar a sala
 //router.put("/entra", controllers.sales.entrarASala);
