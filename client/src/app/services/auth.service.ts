@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, take, tap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Socket } from 'ngx-socket-io';
 
 import { User } from '../models/user';
 import { environment } from '../../environments/environment';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,18 +17,27 @@ export class AuthService {
   //headers = new HttpHeaders().set('Content-Type', 'application/json');
   tokenData: any;
 
-  constructor(private http: HttpClient, public router: Router) {}
+  constructor(
+    private http: HttpClient,
+    public router: Router,
+    private socket: Socket,
+    private userService: UserService
+  ) {}
 
   // Register
   register(user: User): Observable<any> {
     let api = `${this.endpoint}/register`;
-    return this.http.post(api, user).pipe(catchError(this.handleError));
+    return this.http.post(api, user).pipe(
+      tap((res) => console.log('RxJS - register:', res)),
+      catchError(this.handleError)
+    );
   }
 
   // Login
   login(user: User) {
     return this.http
       .post<any>(`${this.endpoint}/login`, user)
+      .pipe(tap((res) => console.log('RxJS - login:', res)))
       .subscribe((res: any) => {
         sessionStorage.setItem('access_token', res.token);
         // this.getUser(res.id).subscribe((res) => {
@@ -77,20 +88,35 @@ export class AuthService {
     return authToken !== null ? true : false;
   }
 
-  doLogout() {
-    let removeToken = sessionStorage.removeItem('access_token');
-    //let removeToken = sessionStorage.removeItem('userId');
-    if (removeToken == null) {
-      this.router.navigate(['/login']);
-    }
+  doLogout(userId: number) {
+    //let removeToken = sessionStorage.removeItem('access_token');
+    // this.http
+    //   .post<any>(`${this.endpoint}/logout`, JSON.stringify(userId))
+    //   .subscribe((res: any) => {
+    //     console.log('logout:', res);
+    const userData = this.getUserTokenData();
+    console.log('logout-user:', userData);
+    sessionStorage.removeItem('access_token');
+    // this.userService.usuaris.pipe(take(1)).subscribe({
+    //   next: (u) => {
+    //     console.log('u',u);
+    this.userService.sortirSala(userData.userId);
+    this.socket.emit('logout', userData.userId);
+    //  },
+    // });
+    // });
+    //if (removeToken == null) {
+    this.router.navigate(['/login']);
+    //}
   }
 
   // User profile
   getUser(id: any): Observable<any> {
     let api = `${this.endpoint}/users/${id}`;
     return this.http.get(api).pipe(
+      tap((res) => console.log('RxJS auth.getUser:', res)),
       map((res) => {
-        console.log('res', res);
+        //console.log('res', res);
         return res;
       }),
       catchError(this.handleError)

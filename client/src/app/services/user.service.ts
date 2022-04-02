@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { Socket } from "ngx-socket-io";
-import { BehaviorSubject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+import { BehaviorSubject, tap } from 'rxjs';
 
-import { User } from "../models/user";
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -16,12 +16,24 @@ export class UserService {
 
   public obtenirUsuaris(): void {
     console.log('user.service - obtenirUsuaris ...');
-    this.socket.fromEvent<User[]>('llista_usuaris').subscribe({
-      next: (data: any) => {
-        this.llistaUsuaris = data;
-        this._usuaris.next(this.llistaUsuaris.map((obj) => ({ ...obj })));
-      },
-      error: () => console.log("No s'han pogut carregar els usuaris."),
+    this.socket
+      .fromEvent<User[]>('llista_usuaris')
+      .pipe(tap((res) => console.log('RxJS - obtenirUsuaris:', res)))
+      .subscribe({
+        next: (data: any) => {
+          this.llistaUsuaris = data;
+          this._usuaris.next(this.llistaUsuaris.map((obj) => ({ ...obj })));
+        },
+        error: () => console.log("No s'han pogut carregar els usuaris."),
+      });
+  }
+
+  sortirSala(userId: number) {
+    this.llistaUsuaris.forEach((t, i) => {
+      if (t.id === userId) {
+        this.llistaUsuaris[i].connectatASala = null;
+      }
     });
+    this._usuaris.next(this.llistaUsuaris.map((obj) => ({ ...obj })));
   }
 }

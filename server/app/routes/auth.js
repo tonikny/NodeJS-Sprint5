@@ -29,5 +29,7 @@ router.post(
 // Login
 router.post('/login', controllers.auth.login);
 
+// Logout
+//router.post('/logout', controllers.auth.logout);
 
 module.exports = router;

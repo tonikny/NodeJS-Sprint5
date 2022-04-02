@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { Observable, shareReplay, take, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { MissatgeService } from '../services/missatge.service';
@@ -16,8 +16,8 @@ import { Sala } from '../models/sala';
   styleUrls: ['./xat.component.scss'],
 })
 export class XatComponent implements OnInit {
-  @ViewChild('scrollMe', {static: false})
-  private scrollContainer: ElementRef | undefined;
+  @ViewChild('scrollMe', { read: ElementRef, static: false })
+  private scrollContainer: ElementRef = {} as ElementRef;
 
   usuari!: User;
   llistaSales!: Observable<Sala[]>;
@@ -28,6 +28,7 @@ export class XatComponent implements OnInit {
   llistaUsuaris!: Observable<User[]>;
   mostraInput = false;
   nomSalaNova = '';
+  usuariObs!: Observable<User>;
 
   constructor(
     private router: Router,
@@ -37,11 +38,7 @@ export class XatComponent implements OnInit {
     private userService: UserService
   ) {
     this.obtenirUser();
-    //this.obtenirSales();
-    //this.obtenirMissatges();
   }
-
-  //element.scrollIntoView({ behavior: "smooth", block: "start" });
 
   ngOnInit(): void {
     this.llistaSales = this.salaService.sales; // subscribe to entire collection
@@ -51,7 +48,7 @@ export class XatComponent implements OnInit {
     this.llistaMissatges = this.missatgeService.missatges; // subscribe to entire collection
     this.missatgeService.obtenirMissatges(); // load all missatges
 
-    this.llistaUsuaris = this.userService.usuaris; // subscribe to entire collection
+    this.llistaUsuaris = this.userService.usuaris.pipe(shareReplay()); // subscribe to entire collection
     this.userService.obtenirUsuaris(); // load all usuaris
   }
 
@@ -59,17 +56,19 @@ export class XatComponent implements OnInit {
     const token = this.authService.getUserTokenData();
     console.log('obtenirUser-token', token);
     const userId = token.userId;
-    //const userId = sessionStorage.getItem('userId')
-    this.authService.getUser(userId).pipe(take(1)).subscribe({
-      next: (user: any) => {
-      console.log('user:', user);
-      this.usuari = user;
-    },
-    error: () => {
-      console.log("No s'ha pogut obtenir l'usuari!!");
-      this.authService.doLogout();
-    }
-  });
+    this.usuariObs = this.authService.getUser(userId).pipe(shareReplay());
+    this.usuariObs
+      .pipe(tap((res) => console.log('RxJS - xat -obtenirUser:', res)))
+      .subscribe({
+        next: (user: any) => {
+          console.log('user:', user);
+          this.usuari = user;
+        },
+        error: () => {
+          console.log("No s'ha pogut obtenir l'usuari!!");
+          this.authService.doLogout(userId);
+        },
+      });
   }
 
   obtenirSales() {
@@ -91,14 +90,9 @@ export class XatComponent implements OnInit {
     this.salaService.entrarASala(this.usuari.id!, salaId);
     console.log('xat.component-sala escollida:', salaId);
     this.userService.obtenirUsuaris();
-    console.log(this.llistaUsuaris);
-    
-    /* this.salaActivaObs!.pipe(take(1)).subscribe((value) => {
-      //this.salaActiva = value;
-      console.log('value', value);      
-    }); */
-    //this.scrollToElement();
-
+    setTimeout(() => {
+      this.scrollToEnd();
+    }, 100);
   }
 
   enviarMissatge(): void {
@@ -114,22 +108,24 @@ export class XatComponent implements OnInit {
           );
           this.newMessage.text = '';
         }
-        //this.scrollToElement();
+        setTimeout(() => {
+          this.scrollToEnd();
+        }, 100);
       } else {
         throw new Error('No hi ha sala escollida');
-        
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  scrollToElement(): void {
+  scrollToEnd(): void {
     if (this.scrollContainer) {
-      this.scrollContainer.nativeElement.scrollMe({
+      //console.log('scroll',this.scrollContainer.nativeElement);
+      this.scrollContainer.nativeElement.scrollTo({
         top: this.scrollContainer.nativeElement.scrollHeight,
         left: 0,
-        behavior: 'smooth',
+        behavior: 'instant',
       });
     }
   }

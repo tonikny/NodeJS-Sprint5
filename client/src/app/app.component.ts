@@ -12,7 +12,8 @@ export class AppComponent {
   constructor(public authService: AuthService) {}
   
   logout() {
-    this.authService.doLogout();
+    const token = this.authService.getUserTokenData();
+    this.authService.doLogout(token.userId);
   }
   
 

@@ -3,5 +3,5 @@ export interface User {
   nom: String;
   email: String;
   password: String;
-  connectatASala: number;
+  connectatASala: number | null;
 }

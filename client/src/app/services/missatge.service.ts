@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
 
 import { Missatge } from '../models/missatge';
@@ -45,7 +45,9 @@ export class MissatgeService {
   }
 
   eventMissatgeRebut() {
-    this.socket.fromEvent<Missatge>('nou_missatge_resp').subscribe({
+    this.socket.fromEvent<Missatge>('nou_missatge_resp')
+    .pipe(tap((res) => console.log('RxJS eventMissatgeRebut:', res)))
+    .subscribe({
       next: (data) => {
         this.dataStore.missatges.push(data);
         this._missatges.next(Object.assign({}, this.dataStore).missatges);
@@ -71,7 +73,9 @@ export class MissatgeService {
   } */
   public obtenirMissatges() {
     console.log('missatge.service - obtenirMissatges ...');
-    this.socket.fromEvent<Missatge[]>('llista_missatges').subscribe({
+    this.socket.fromEvent<Missatge[]>('llista_missatges')
+    .pipe(tap((res) => console.log('RxJS obtenirMissatges:', res)))
+    .subscribe({
       next: (data: any) => {
         this.dataStore.missatges = data;
         this._missatges.next(Object.assign({}, this.dataStore).missatges);

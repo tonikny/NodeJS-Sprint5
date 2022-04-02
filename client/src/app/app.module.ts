@@ -25,7 +25,6 @@ const config: SocketIoConfig = {
     // query: {
     //   'x-token': sessionStorage.getItem('access_token'),
     // },
-
     //   extraHeaders: {
     //     Authorization: "Bearer "+sessionStorage.getItem('access_token')
     //   }
@@ -33,7 +32,6 @@ const config: SocketIoConfig = {
 };
 
 //console.log('access_token',sessionStorage.getItem('access_token'));
-
 
 @NgModule({
   declarations: [AppComponent, XatComponent],

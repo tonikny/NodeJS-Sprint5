@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
   signupForm: FormGroup;
 
   constructor(
@@ -23,9 +23,6 @@ export class RegisterComponent implements OnInit {
     });
   }
   
-  ngOnInit(): void {
-  }
-
   registerUser() {
     this.authService.register(this.signupForm.value).subscribe((res) => {
       console.log(res);

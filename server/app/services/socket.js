@@ -1,12 +1,12 @@
 const { Server } = require("socket.io");
 const cors = require('cors');
-const missatgesService = require('../services/missatges');
-const salesService = require('../services/sales');
-const usersService = require('../services/users');
-const authService = require('./currentuser');
+const missatgesService = require('./missatges');
+const salesService = require('./sales');
+const usersService = require('./users');
+const authService = require('./auth');
 const checkToken = require('../helpers/auth')
 const { jwtSecretToken } = require("../config/config");
-const currentUser = require('../services/currentuser');
+//const currentUser = require('../services/currentuser');
 
 const initSocket = (httpServer) => {
 
@@ -48,8 +48,9 @@ const initSocket = (httpServer) => {
       //console.log('Socket-Entrant a sala:', socket.rooms); // Set { <socket.id> }
       previousSalaId = currentSalaId;
     };
-    // const userToken = socket.handshake.query['x-token'];
-    // console.log(userToken);
+    //const userToken = socket.handshake.query['x-token'];
+    //console.log('token', userToken);
+
     // let user = undefined;
     // if (userToken) {
     //   user = checkToken(userToken);
@@ -73,7 +74,7 @@ const initSocket = (httpServer) => {
 
     // subscribe person to chat & other user as well
     socket.on("entra_sala", async (userId, salaId) => {
-      console.log('socket-on.entra',userId, salaId);
+      console.log('socket-on.entra', userId, salaId);
       try {
         // const user = currentUser.getData();
         // const userId = user.userId;
@@ -101,21 +102,27 @@ const initSocket = (httpServer) => {
     socket.on('nou_missatge', async (message) => {
       console.log('socket-service:', message, socket.rooms);
       try {
-        await missatgesService.crearMissatge(message);
-        io.to(message.salaId.toString()).emit('nou_missatge_resp', message);
-        //io.emit('missatges', message);
+        const missDesat = await missatgesService.crearMissatge(message);
+        io.to(message.salaId.toString()).emit('nou_missatge_resp', missDesat);
       } catch (e) {
         console.log('ERROR SOCKET');
       }
     });
 
+    socket.on('logout', async (userId) => {
+      console.log('logout', userId);
+      await usersService.surtSala(userId);
+      io.emit('llista_usuaris', await usersService.obtenirUsers());
+    });
+
     socket.on('disconnect', async (motiu) => {
       console.log('user disconnected!', motiu);
-      try {
-        await usersService.surtSala(currentUser.getData().userId);
-      } catch (error) {
-        console.log('Cap usuari...', currentUser.getData());
-      }
+      // try {
+      //   await usersService.surtSala(currentUser.getData().userId);
+      //   io.emit('llista_usuaris', await usersService.obtenirUsers());
+      // } catch (error) {
+      //   console.log('Cap usuari...', currentUser.getData());
+      // }
     });
   });
 

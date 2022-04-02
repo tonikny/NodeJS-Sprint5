@@ -30,10 +30,12 @@
 }
 
 .conversation-history.mat-list {
-  height: calc(100% - 180px);
-  overflow: scroll;
+  height: calc(100% - 100px);
+  overflow-x: scroll;
   position: absolute;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .conversation-history.mat-list p {
@@ -45,7 +47,12 @@
 }
 
 .conversations .mat-list-item {
+  // flex: 1 1 auto;
   cursor: pointer;
+}
+.mat-list-item .span { 
+  width: 100%;
+	// justify-content:end; 
 }
 
 .mat-card {
@@ -86,6 +93,8 @@ section .mat-list .mat-list-avatar{
 }
 
 /* #scrollMe {
-  height: 200px;
-  overflow: scroll;
+
+  //height: 200px;
+  //overflow: scroll;
+
 } */

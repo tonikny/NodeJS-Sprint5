@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Socket } from 'ngx-socket-io';
 
 import { Sala } from '../models/sala';
@@ -31,9 +31,11 @@ export class SalaService {
   public entrarASala(userId: number, salaId: number): void {
     //const userId = this.authService.getUserTokenData().userId;
     //this.salaActivaObs.pipe(take(1)).subscribe((value) => {
-    this.salaActivaObs.subscribe((value) => {
-      this.salaActiva = value;
-    });
+    this.salaActivaObs
+      .pipe(tap((res) => console.log('RxJS entrarASala:', res)))
+      .subscribe((value) => {
+        this.salaActiva = value;
+      });
     console.log('sala.service - salaActiva', this.salaActiva);
     if (userId) {
       console.log('sala.service - entra:', salaId, userId);
@@ -44,28 +46,33 @@ export class SalaService {
   }
 
   eventEntraASala() {
-    //const userId = this.authService.getUserTokenData().userId;
-    this.socket.fromEvent<Sala>('sala_escollida').subscribe({
-      next: (data: any) => {
-        console.log('eventEntraASala-data',data);
-        this.salaActiva = data;
-        this._salaActiva.next(data);
-        //this._salaActiva.complete();
-        console.log('sala.service-Event-salaActiva', this.salaActiva);
-      },
-      error: () => console.log("No s'ha pogut entrar a la sala."),
-    });
+    this.socket
+      .fromEvent<Sala>('sala_escollida')
+      .pipe(tap((res) => console.log('RxJS - eventEntrarASala:', res)))
+      .subscribe({
+        next: (data: any) => {
+          console.log('eventEntraASala-data', data);
+          this.salaActiva = data;
+          this._salaActiva.next(data);
+          //this._salaActiva.complete();
+          console.log('sala.service-Event-salaActiva', this.salaActiva);
+        },
+        error: () => console.log("No s'ha pogut entrar a la sala."),
+      });
   }
 
   public obtenirSales(): void {
     console.log('sala.service - obtenirSales ...');
-    this.socket.fromEvent<Sala[]>('llista_sales_resp').subscribe({
-      next: (data: any) => {
-        this.llistaSales = data;
-        this._sales.next(this.llistaSales.map((obj) => ({ ...obj })));
-      },
-      error: () => console.log("No s'han pogut carregar les sales."),
-    });
+    this.socket
+      .fromEvent<Sala[]>('llista_sales_resp')
+      .pipe(tap((res) => console.log('RxJS obtenirSales:', res)))
+      .subscribe({
+        next: (data: any) => {
+          this.llistaSales = data;
+          this._sales.next(this.llistaSales.map((obj) => ({ ...obj })));
+        },
+        error: () => console.log("No s'han pogut carregar les sales."),
+      });
   }
 
   crearSala(userId: number, nom: string) {
@@ -73,7 +80,9 @@ export class SalaService {
   }
 
   eventSalaCreada() {
-    this.socket.fromEvent<Sala>('sala_creada_resp').subscribe({
+    this.socket.fromEvent<Sala>('sala_creada_resp')
+    .pipe(tap((res) => console.log('RxJS eventSalaCreada:', res)))
+    .subscribe({
       next: (data: any) => {
         this.llistaSales.push(data);
         this._sales.next(this.llistaSales.map((obj) => ({ ...obj })));

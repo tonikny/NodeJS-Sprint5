@@ -50,78 +50,90 @@
   >
     <mat-card>
       <mat-list class="members">
-        <mat-list-item *ngFor="let user of llistaUsuaris | async">
-          <p *ngIf="(salaActivaObs | async)?.id===user.connectatASala"
-          [ngStyle]="{'font-weight':user.id === usuari.id ? 'bold': 'normal'}"
+        <ng-container *ngFor="let user of llistaUsuaris | async">
+          <mat-list-item
+            *ngIf="(salaActivaObs | async)?.id === user.connectatASala"
+            [ngStyle]="{
+              'font-weight':
+                user.id === (usuariObs | async)?.id ? 'bold' : 'normal'
+            }"
           >
-          {{ user.nom }}
-        </p>
-        </mat-list-item>
+            {{ user.nom }}
+          </mat-list-item>
+        </ng-container>
       </mat-list>
     </mat-card>
   </mat-sidenav>
-  <section class="empty-conversation" *ngIf="!(salaActivaObs | async)?.id">
+  <section
+    class="empty-conversation"
+    *ngIf="!(salaActivaObs | async)?.id; else sala"
+  >
     <h2 class="mat-display-1">Escull la sala on vols entrar a l'esquerra</h2>
   </section>
-  <section *ngIf="salaActivaObs | async as salaActiva">
-    <div class="mat-typography conversation-header">
-      <h2 style="align-content: center;">
-        <mat-icon>forum</mat-icon>
-        &nbsp; {{ salaActiva.nom }}
-      </h2>
-      <!-- <p>
+  <ng-template #sala>
+    <section>
+      <div class="mat-typography conversation-header">
+        <h2 style="align-content: center">
+          <mat-icon>forum</mat-icon>
+          &nbsp; {{ (salaActivaObs | async)!.nom }}
+        </h2>
+        <!-- <p>
         <mat-icon>account_circle</mat-icon>
          {{(selectedConversation.members | keys).length}}  Members</p> 
         &nbsp; {{ salaEscollida.nombreUsuaris }} Membres
       </p> -->
-    </div>
+      </div>
 
-    <mat-divider></mat-divider>
-    <mat-list dense class="conversation-history mat-typography" #scrollMe>
-      <mat-list-item
-        *ngFor="let miss of llistaMissatges | async; index as i"
-        [dir]="miss.userId === usuari.id ? 'rtl' : 'ltr'"
-      >
-        <!-- <img *ngIf="event.type == 'text'" matListAvatar matTooltip="{{selectedConversation.members[event.from].user.name}}" src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg" -->
-        <!-- <img
-          matListAvatar
-          src="https://randomuser.me/api/portraits/thumb/lego/2.jpg"
-        /> -->
-        <!--           <p *ngIf="event.type == 'text'" [dir]="'ltr'">{{event.body.text}}</p>
-        <p *ngIf="event.type == 'member:joined'" class="text-center">
-          <b>{{selectedConversation.members[event.from].user.name}}</b> has joined the conversation</p> -->
-        <p [dir]="'ltr'"></p>
-        <!-- <p class="text-center"><b></b> ha entrat a la sala</p> -->
-        <p
-          class="text-center"
+      <mat-divider></mat-divider>
+      <mat-list dense class="conversation-history mat-typography" #scrollMe>
+        <mat-list-item
+          *ngFor="let miss of llistaMissatges | async; index as i"
+          style="border-radius: 10px 20px; width: 60%; margin-top: 10px; "
           [ngStyle]="{
             'background-color':
-              miss.userId === usuari.id
+              miss.userId === (usuariObs | async)?.id
                 ? 'rgba(255, 160, 122, 0.7)'
-                : 'rgba(255, 160, 122, 0.4)'
+                : 'rgba(255, 160, 122, 0.4)',
+                'align-self':
+              miss.userId === (usuariObs | async)?.id
+                ? 'flex-end'
+                : 'flex-begin'
           }"
-          style="border-radius: 10px 20px; width: 60%; font-size: medium"
+          [dir]="miss.userId === (usuariObs | async)?.id ? 'rtl' : 'ltr'"
         >
-          {{ miss.text }}
-        </p>
-      </mat-list-item>
-    </mat-list>
+        <div>
+          <p style="font-size: smaller;">
+            {{ miss.createdAt | date: "HH:mm" }}
+          </p>
+          <p [dir]="miss.userId === (usuariObs | async)?.id ? 'rtl' : 'ltr'"
+          class="text-center" style="font-size: medium">
+            <b [ngStyle]="{
+              'visibility':
+                miss.userId === (usuariObs | async)?.id
+                  ? 'hidden'
+                  : 'visible'}" style="font-size: smaller;">
+                  {{miss.userId}}:</b> {{ miss.text }}
+          </p>
+        </div>
+        </mat-list-item>
+      </mat-list>
 
-    <div class="conversation-input">
-      <mat-divider></mat-divider>
-      <mat-form-field class="full-width">
-        <!-- <input matInput placeholder="Start chatting..." name="text" /> -->
-        <!-- [(ngModel)]="text"> -->
-        <!-- <mat-icon matSuffix (click)="sendText(text)">send</mat-icon> -->
+      <div class="conversation-input">
+        <mat-divider></mat-divider>
+        <mat-form-field class="full-width">
+          <!-- <input matInput placeholder="Start chatting..." name="text" /> -->
+          <!-- [(ngModel)]="text"> -->
+          <!-- <mat-icon matSuffix (click)="sendText(text)">send</mat-icon> -->
 
-        <input
-          matInput
-          placeholder="Start chatting..."
-          [(ngModel)]="newMessage.text"
-          (keyup)="$event.keyCode === 13 && enviarMissatge()"
-        />
-        <mat-icon matSuffix (click)="enviarMissatge()">send</mat-icon>
-      </mat-form-field>
-    </div>
-  </section>
+          <input
+            matInput
+            placeholder="Comença a xatejar..."
+            [(ngModel)]="newMessage.text"
+            (keyup)="$event.keyCode === 13 && enviarMissatge()"
+          />
+          <mat-icon matSuffix (click)="enviarMissatge()">send</mat-icon>
+        </mat-form-field>
+      </div>
+    </section>
+  </ng-template>
 </mat-sidenav-container>

@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const { jwtSecretToken } = require('../config/config');
 const userService = require('../services/users');
 const { User } = require('../models')
-const currentUser = require('../services/currentuser');
 
 module.exports = {
 
@@ -19,7 +18,7 @@ module.exports = {
         .save()
         .then((response) => {
           res.status(201).json({
-            message: 'User successfully created!',
+            message: 'Usuari creat!',
             result: response,
           })
         })
@@ -32,7 +31,6 @@ module.exports = {
   },
 
   login: async (req, res, next) => {
-    let getUser;
     //TODO: fer servir authService + userService?
     const user = await User.findOne({
       where: {
@@ -45,28 +43,22 @@ module.exports = {
         message: 'No existeix l\'usuari',
       })
     }
-    getUser = user
     if (req.body.password && await bcrypt.compare(req.body.password, user.password)) {
       let jwtToken = jwt.sign(
         {
-          email: getUser.email,
-          userId: getUser.id,
-          nom: getUser.nom
+          email: user.email,
+          userId: user.id,
+          nom: user.nom
         },
         jwtSecretToken.token,
         {
           expiresIn: '1d',
         },
       );
-      /* currentUser.setData({
-        email: getUser.email,
-        userId: getUser.id,
-        nom: getUser.nom
-      }); */
       res.status(200).json({
         token: jwtToken,
         expiresIn: 3600,
-        id: getUser.id,
+        id: user.id,
       })
     } else {
       return res.status(401).json({
@@ -75,7 +67,13 @@ module.exports = {
     }
   },
 
-  //TODO: logout
-  logout: async (req, res, next) => {}
+/*   // logout
+  logout: async (req, res, next) => {
+    const userId = req.body.userId;
+    if (userId) await userService.surtSala(userId);
+    res.status(200).json({
+      message: 'Logout!',
+    });
+  } */
 
-  }
+}

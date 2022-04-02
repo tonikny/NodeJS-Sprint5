@@ -25,7 +25,7 @@ class MissatgesService {
         salaId: m.salaId,
         userId: m.userId
       });
-      await missatge.save();
+      return await missatge.save();
     } catch (e) {
       console.error('Error db creant missatge', e);
       throw (e);
