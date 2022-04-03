@@ -25,8 +25,7 @@ export class RegisterComponent {
   
   registerUser() {
     this.authService.register(this.signupForm.value).subscribe((res) => {
-      console.log(res);
-      
+      //console.log(res);
       if (res.result) {
         this.signupForm.reset();
         this.router.navigate(['login']);

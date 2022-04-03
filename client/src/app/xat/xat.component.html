@@ -1,12 +1,8 @@
 <mat-sidenav-container class="container">
   <mat-sidenav mode="side" opened>
     <mat-card>
-      <!-- <mat-tab-group> -->
-      <!-- <mat-tab> -->
       <mat-card-header style="background-color: azure">
-        <!-- <ng-template mat-tab-label> -->
         <h2>Sales</h2>
-        <!-- </ng-template> -->
       </mat-card-header>
       <mat-list class="conversations">
         <mat-list-item
@@ -15,7 +11,7 @@
         >
           <mat-icon matListIcon>forum</mat-icon>
           <span>{{ sala.nom }} </span
-          ><!-- <mat-chip style="padding: 9px;">{{ sala.nombreUsuaris }}</mat-chip> -->
+          >
         </mat-list-item>
         <mat-list-item>
           <mat-chip>
@@ -38,8 +34,6 @@
           </mat-form-field>
         </mat-list-item>
       </mat-list>
-      <!-- </mat-tab> -->
-      <!-- </mat-tab-group> -->
     </mat-card>
   </mat-sidenav>
   <mat-sidenav
@@ -77,11 +71,6 @@
           <mat-icon>forum</mat-icon>
           &nbsp; {{ (salaActivaObs | async)!.nom }}
         </h2>
-        <!-- <p>
-        <mat-icon>account_circle</mat-icon>
-         {{(selectedConversation.members | keys).length}}  Members</p> 
-        &nbsp; {{ salaEscollida.nombreUsuaris }} Membres
-      </p> -->
       </div>
 
       <mat-divider></mat-divider>
@@ -112,7 +101,7 @@
                 miss.userId === (usuariObs | async)?.id
                   ? 'hidden'
                   : 'visible'}" style="font-size: smaller;">
-                  {{miss.userId}}:</b> {{ miss.text }}
+                  {{miss['user.nom']}}:</b> {{ miss.text }}
           </p>
         </div>
         </mat-list-item>
@@ -121,10 +110,6 @@
       <div class="conversation-input">
         <mat-divider></mat-divider>
         <mat-form-field class="full-width">
-          <!-- <input matInput placeholder="Start chatting..." name="text" /> -->
-          <!-- [(ngModel)]="text"> -->
-          <!-- <mat-icon matSuffix (click)="sendText(text)">send</mat-icon> -->
-
           <input
             matInput
             placeholder="Comença a xatejar..."

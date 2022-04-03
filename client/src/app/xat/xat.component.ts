@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, shareReplay, take, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -15,12 +15,12 @@ import { Sala } from '../models/sala';
   templateUrl: './xat.component.html',
   styleUrls: ['./xat.component.scss'],
 })
-export class XatComponent implements OnInit {
+export class XatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollMe', { read: ElementRef, static: false })
   private scrollContainer: ElementRef = {} as ElementRef;
 
   usuari!: User;
-  llistaSales!: Observable<Sala[]>;
+  llistaSales = new Observable<Sala[]>();
   salaActivaObs = new Observable<Sala>();
   salaActiva: Sala | undefined;
   newMessage: Missatge = {} as Missatge;
@@ -39,11 +39,11 @@ export class XatComponent implements OnInit {
   ) {
     this.obtenirUser();
   }
-
+  
   ngOnInit(): void {
     this.llistaSales = this.salaService.sales; // subscribe to entire collection
     this.salaService.obtenirSales(); // load all sales
-    this.salaActivaObs = this.salaService.salaActivaObs; // subscribe to entire collection
+    this.salaActivaObs = this.salaService.salaActivaObs; // subscribe
 
     this.llistaMissatges = this.missatgeService.missatges; // subscribe to entire collection
     this.missatgeService.obtenirMissatges(); // load all missatges
@@ -54,14 +54,16 @@ export class XatComponent implements OnInit {
 
   obtenirUser() {
     const token = this.authService.getUserTokenData();
-    console.log('obtenirUser-token', token);
+    //console.log('obtenirUser-token', token);
     const userId = token.userId;
     this.usuariObs = this.authService.getUser(userId).pipe(shareReplay());
     this.usuariObs
-      .pipe(tap((res) => console.log('RxJS - xat -obtenirUser:', res)))
+      .pipe(
+        take(1)
+        //tap((res) => console.log('RxJS - xat -obtenirUser:', res))
+      )
       .subscribe({
         next: (user: any) => {
-          console.log('user:', user);
           this.usuari = user;
         },
         error: () => {
@@ -71,15 +73,8 @@ export class XatComponent implements OnInit {
       });
   }
 
-  obtenirSales() {
-    this.salaService.obtenirSales();
-    console.log('xat.component-onInit-sales:', this.llistaSales);
-  }
-
   crearSala() {
-    console.log('this.nomSalaNova', this.nomSalaNova);
     if (this.nomSalaNova) {
-      console.log('this.nomSalaNova-notnull', this.nomSalaNova);
       this.salaService.crearSala(this.usuari.id!, this.nomSalaNova);
       this.nomSalaNova = '';
       this.mostraInput = false;
@@ -88,7 +83,7 @@ export class XatComponent implements OnInit {
 
   escollirSala(salaId: any) {
     this.salaService.entrarASala(this.usuari.id!, salaId);
-    console.log('xat.component-sala escollida:', salaId);
+    //console.log('xat.component-sala escollida:', salaId);
     this.userService.obtenirUsuaris();
     setTimeout(() => {
       this.scrollToEnd();
@@ -97,7 +92,7 @@ export class XatComponent implements OnInit {
 
   enviarMissatge(): void {
     try {
-      console.log('xat-sendMessage-newMessage', this.newMessage);
+      //console.log('xat-sendMessage-newMessage', this.newMessage);
       if (this.salaService.salaActiva && this.salaService.salaActiva.id) {
         // No enviem missatges buits
         if (this.newMessage.text) {
@@ -121,7 +116,6 @@ export class XatComponent implements OnInit {
 
   scrollToEnd(): void {
     if (this.scrollContainer) {
-      //console.log('scroll',this.scrollContainer.nativeElement);
       this.scrollContainer.nativeElement.scrollTo({
         top: this.scrollContainer.nativeElement.scrollHeight,
         left: 0,
@@ -129,4 +123,9 @@ export class XatComponent implements OnInit {
       });
     }
   }
+
+  ngOnDestroy(): void {
+    return;
+  }
+
 }

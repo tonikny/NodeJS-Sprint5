@@ -18,7 +18,7 @@ export class UserComponent {
   ) {
     let id = this.actRoute.snapshot.paramMap.get('id');
     this.authService.getUser(id)
-    .pipe(tap((res) => console.log('RxJS user.component:', res)))
+    //.pipe(tap((res) => console.log('RxJS user.component:', res)))
     .subscribe((res) => {
       this.currentUser = res;      
     });

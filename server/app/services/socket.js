@@ -103,9 +103,11 @@ const initSocket = (httpServer) => {
       console.log('socket-service:', message, socket.rooms);
       try {
         const missDesat = await missatgesService.crearMissatge(message);
+        const userData = await usersService.obtenirUser(missDesat.userId);
+        missDesat.setDataValue('user.nom',userData.nom);
         io.to(message.salaId.toString()).emit('nou_missatge_resp', missDesat);
       } catch (e) {
-        console.log('ERROR SOCKET');
+        console.log('ERROR SOCKET',e);
       }
     });
 

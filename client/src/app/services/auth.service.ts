@@ -28,7 +28,7 @@ export class AuthService {
   register(user: User): Observable<any> {
     let api = `${this.endpoint}/register`;
     return this.http.post(api, user).pipe(
-      tap((res) => console.log('RxJS - register:', res)),
+      //tap((res) => console.log('RxJS - register:', res)),
       catchError(this.handleError)
     );
   }
@@ -37,26 +37,19 @@ export class AuthService {
   login(user: User) {
     return this.http
       .post<any>(`${this.endpoint}/login`, user)
-      .pipe(tap((res) => console.log('RxJS - login:', res)))
+      //.pipe(tap((res) => console.log('RxJS - login:', res)))
       .subscribe((res: any) => {
         sessionStorage.setItem('access_token', res.token);
-        // this.getUser(res.id).subscribe((res) => {
         this.tokenData = this.decodeToken(res.token);
-        // console.log('currentUserData', this.tokenData);
-        console.log('login:', res);
-
-        // sessionStorage.setItem('userId', res.id);
-        // sessionStorage.setItem('nom', res.nom);
+        //console.log('login:', res);
         this.router.navigate(['xat/']); // + res.id]);
-        // });
       });
   }
 
   getUserTokenData() {
-    // const { nom } = this.tokenData;
     const token = sessionStorage.getItem('access_token')!;
     this.tokenData = this.decodeToken(token);
-    console.log(this.tokenData);
+    //console.log(this.tokenData);
     return this.tokenData;
   }
 
@@ -82,41 +75,27 @@ export class AuthService {
   }
 
   get isLoggedIn(): boolean {
-    //let authToken = sessionStorage.getItem('access_token');
     let authToken = sessionStorage.getItem('access_token');
     //console.log('isLoggedIn:', authToken);
     return authToken !== null ? true : false;
   }
 
   doLogout(userId: number) {
-    //let removeToken = sessionStorage.removeItem('access_token');
-    // this.http
-    //   .post<any>(`${this.endpoint}/logout`, JSON.stringify(userId))
-    //   .subscribe((res: any) => {
-    //     console.log('logout:', res);
     const userData = this.getUserTokenData();
-    console.log('logout-user:', userData);
+    //console.log('logout-user:', userData);
     sessionStorage.removeItem('access_token');
-    // this.userService.usuaris.pipe(take(1)).subscribe({
-    //   next: (u) => {
-    //     console.log('u',u);
     this.userService.sortirSala(userData.userId);
     this.socket.emit('logout', userData.userId);
-    //  },
-    // });
-    // });
-    //if (removeToken == null) {
     this.router.navigate(['/login']);
-    //}
   }
 
   // User profile
   getUser(id: any): Observable<any> {
     let api = `${this.endpoint}/users/${id}`;
     return this.http.get(api).pipe(
-      tap((res) => console.log('RxJS auth.getUser:', res)),
+      //tap((res) => console.log('RxJS auth.getUser:', res)),
+      take(1),
       map((res) => {
-        //console.log('res', res);
         return res;
       }),
       catchError(this.handleError)
@@ -134,7 +113,6 @@ export class AuthService {
       msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
     console.log(error);
-
     return throwError(() => new Error(msg));
   }
 }

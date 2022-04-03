@@ -1,5 +1,6 @@
 const models = require('../models');
 const missatge = require('../models/missatge');
+const user = require('../models/user');
 
 class MissatgesService {
 
@@ -8,6 +9,7 @@ class MissatgesService {
       where: {
         salaId: salaId
       },
+      include: { model:models.User, attributes: ['nom']},
       order: [
         ['createdAt']
       ],
@@ -24,7 +26,7 @@ class MissatgesService {
         text: m.text,
         salaId: m.salaId,
         userId: m.userId
-      });
+      },{raw: true});
       return await missatge.save();
     } catch (e) {
       console.error('Error db creant missatge', e);

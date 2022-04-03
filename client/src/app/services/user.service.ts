@@ -15,10 +15,10 @@ export class UserService {
   constructor(private socket: Socket) {}
 
   public obtenirUsuaris(): void {
-    console.log('user.service - obtenirUsuaris ...');
+    //console.log('user.service - obtenirUsuaris ...');
     this.socket
       .fromEvent<User[]>('llista_usuaris')
-      .pipe(tap((res) => console.log('RxJS - obtenirUsuaris:', res)))
+      //.pipe(tap((res) => console.log('RxJS - obtenirUsuaris:', res)))
       .subscribe({
         next: (data: any) => {
           this.llistaUsuaris = data;
@@ -36,4 +36,5 @@ export class UserService {
     });
     this._usuaris.next(this.llistaUsuaris.map((obj) => ({ ...obj })));
   }
+  
 }

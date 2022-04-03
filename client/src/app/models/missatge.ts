@@ -11,4 +11,5 @@ export interface Missatge {
   salaId: number;
   userId: number;
   createdAt: Date;
+  'user.nom': string;
 }

@@ -3,12 +3,12 @@ const models = require('../models');
 class UserService {
 
   static async obtenirUsers() {
-    const users = await models.User.findAll();
+    const users = await models.User.findAll({raw: true});
     return users;
   }
 
   static async obtenirUser(id) {
-    const user = await models.User.findByPk(id);
+    const user = await models.User.findByPk(id, {raw: true});
     if (user === null) {
       console.log('Not found!');
     }
