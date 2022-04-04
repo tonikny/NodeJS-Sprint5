@@ -1,0 +1,124 @@
+<mat-sidenav-container class="container">
+  <mat-sidenav mode="side" opened>
+    <mat-card>
+      <mat-card-header style="background-color: azure">
+        <h2>Sales</h2>
+      </mat-card-header>
+      <mat-list class="conversations">
+        <mat-list-item
+          *ngFor="let sala of llistaSales | async"
+          (click)="escollirSala(sala.id)"
+        >
+          <mat-icon matListIcon>forum</mat-icon>
+          <span>{{ sala.nom }} </span
+          >
+        </mat-list-item>
+        <mat-list-item>
+          <mat-chip>
+            <mat-icon
+              matListIcon
+              (click)="mostraInput = mostraInput ? false : true"
+              >add</mat-icon
+            >
+          </mat-chip>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-form-field class="full-width" *ngIf="mostraInput">
+            <input
+              matInput
+              placeholder="Nom..."
+              [(ngModel)]="nomSalaNova"
+              (keyup)="$event.keyCode === 13 && crearSala()"
+            />
+            <mat-icon matSuffix (click)="crearSala()">send</mat-icon>
+          </mat-form-field>
+        </mat-list-item>
+      </mat-list>
+    </mat-card>
+  </mat-sidenav>
+  <mat-sidenav
+    position="end"
+    mode="side"
+    opened
+    *ngIf="(salaActivaObs | async)?.id"
+  >
+    <mat-card>
+      <mat-list class="members">
+        <ng-container *ngFor="let user of llistaUsuaris | async">
+          <mat-list-item
+            *ngIf="(salaActivaObs | async)?.id === user.connectatASala"
+            [ngStyle]="{
+              'font-weight':
+                user.id === (usuariObs | async)?.id ? 'bold' : 'normal'
+            }"
+          >
+            {{ user.nom }}
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+    </mat-card>
+  </mat-sidenav>
+  <section
+    class="empty-conversation"
+    *ngIf="!(salaActivaObs | async)?.id; else sala"
+  >
+    <h2 class="mat-display-1">Escull la sala on vols entrar a l'esquerra</h2>
+  </section>
+  <ng-template #sala>
+    <section>
+      <div class="mat-typography conversation-header">
+        <h2 style="align-content: center">
+          <mat-icon>forum</mat-icon>
+          &nbsp; {{ (salaActivaObs | async)!.nom }}
+        </h2>
+      </div>
+
+      <mat-divider></mat-divider>
+      <mat-list dense class="conversation-history mat-typography" #scrollMe>
+        <mat-list-item
+          *ngFor="let miss of llistaMissatges | async; index as i"
+          style="border-radius: 10px 20px; width: 60%; margin-top: 10px; "
+          [ngStyle]="{
+            'background-color':
+              miss.userId === (usuariObs | async)?.id
+                ? 'rgba(255, 160, 122, 0.7)'
+                : 'rgba(255, 160, 122, 0.4)',
+                'align-self':
+              miss.userId === (usuariObs | async)?.id
+                ? 'flex-end'
+                : 'flex-begin'
+          }"
+          [dir]="miss.userId === (usuariObs | async)?.id ? 'rtl' : 'ltr'"
+        >
+        <div>
+          <p style="font-size: smaller;">
+            {{ miss.createdAt | date: "HH:mm" }}
+          </p>
+          <p [dir]="miss.userId === (usuariObs | async)?.id ? 'rtl' : 'ltr'"
+          class="text-center" style="font-size: medium">
+            <b [ngStyle]="{
+              'visibility':
+                miss.userId === (usuariObs | async)?.id
+                  ? 'hidden'
+                  : 'visible'}" style="font-size: smaller;">
+                  {{miss['user.nom']}}:</b> {{ miss.text }}
+          </p>
+        </div>
+        </mat-list-item>
+      </mat-list>
+
+      <div class="conversation-input">
+        <mat-divider></mat-divider>
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            placeholder="Comença a xatejar..."
+            [(ngModel)]="newMessage.text"
+            (keyup)="$event.keyCode === 13 && enviarMissatge()"
+          />
+          <mat-icon matSuffix (click)="enviarMissatge()">send</mat-icon>
+        </mat-form-field>
+      </div>
+    </section>
+  </ng-template>
+</mat-sidenav-container>

@@ -1,0 +1,44 @@
+<mat-grid-list cols="1" rowHeight="100px">
+  <mat-grid-tile colspan="1" rowspan="1" class="wrap"></mat-grid-tile>
+  <mat-grid-tile colspan="1" rowspan="3" class="wrap">
+    <mat-card class="mat-typography login">
+      <h1>Registre</h1>
+      <form
+        [formGroup]="signupForm"
+        (ngSubmit)="registerUser()"
+      >
+        <mat-form-field class="full-width">
+          <input
+            type="text"
+            matInput
+            class="form-control"
+            formControlName="nom"
+            placeholder="Nom"
+            required
+          />
+        </mat-form-field>
+        <br />
+        <mat-form-field class="full-width">
+          <input
+            type="text"
+            matInput
+            placeholder="Enter email"
+            formControlName="email"
+            required
+          />
+        </mat-form-field>
+        <br />
+          <mat-form-field class="full-width">
+            <input
+              type="password"
+              matInput
+              placeholder="Enter password"
+              formControlName="password"
+            />
+          </mat-form-field>
+        <br />
+        <button type="submit" mat-raised-button color="primary">Register</button>
+      </form>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
