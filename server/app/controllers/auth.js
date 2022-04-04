@@ -65,15 +65,6 @@ module.exports = {
         message: 'Authentication failed',
       })
     }
-  },
-
-/*   // logout
-  logout: async (req, res, next) => {
-    const userId = req.body.userId;
-    if (userId) await userService.surtSala(userId);
-    res.status(200).json({
-      message: 'Logout!',
-    });
-  } */
+  }
 
 }

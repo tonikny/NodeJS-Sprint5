@@ -13,9 +13,8 @@ module.exports = {
         group: ['id'],
         raw: true
       });
-      //this.sales.map(o => { console.log('---', o.dataValues) });
       this.sales = sales;
-      console.log('-------Sales----------->', this.sales.map(o => o.nom));
+      //console.log('-------Sales----------->', this.sales.map(o => o.nom));
       return this.sales;
     }
     catch (e) {
@@ -43,7 +42,7 @@ module.exports = {
 
   // entrar a sala
   entrarASala: async (userId, salaId) => {
-    console.log('Usuari ' + userId + ' entra a Sala ' + salaId);
+    //console.log('Usuari ' + userId + ' entra a Sala ' + salaId);
     try {
       const res = await models.User.update({ connectatASala: salaId }, {
         where: {
@@ -56,20 +55,6 @@ module.exports = {
       console.error('Error db entrant a sala', e.original);
       throw (e);
     }
-  },
-
-  // sortir de sala
-  /* sortirDeSala: async (id) => {
-    try {
-      await models.User.update({ connectatASala: null }, {
-        where: {
-          id: id
-        }
-      });
-    } catch (e) {
-      console.error('Error db sortint de sala', e.original);
-      throw (e);
-    }
-  } */
+  }
 
 }

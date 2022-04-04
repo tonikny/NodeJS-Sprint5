@@ -11,7 +11,7 @@ const dev = {
     port: parseInt(process.env.DEV_DB_PORT) || 3306,
     user: process.env.DEV_DB_USER,
     pass: process.env.DEV_DB_PASS,
-    name: process.env.DEV_DB_NAME,
+    name: process.env.DEV_DB_NAME || 'xat',
     recreate: process.env.RECREATE_DB === 'true',
     populate: process.env.POPULATE_DB === 'true',
     debug: (process.env.DEBUG_DB !== 'true')?false:console.log
@@ -26,7 +26,7 @@ const prod = {
     port: parseInt(process.env.PROD_DB_PORT) || 3306,
     user: process.env.PROD_DB_USER,
     pass: process.env.PROD_DB_PASS,
-    name: process.env.PROD_DB_NAME,
+    name: process.env.PROD_DB_NAME || 'xat',
     recreate: false,
     populate: false,
     debug: false

@@ -21,7 +21,7 @@ class MissatgesService {
 
   static async crearMissatge(m) {
     try {
-      console.log('Missatge.service-crearMissatge:',m);
+      //console.log('Missatge.service-crearMissatge:',m);
       const missatge = models.Missatge.build({
         text: m.text,
         salaId: m.salaId,

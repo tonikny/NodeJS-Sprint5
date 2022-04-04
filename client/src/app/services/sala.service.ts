@@ -23,6 +23,7 @@ export class SalaService {
     private authService: AuthService,
     private socket: Socket
   ) {
+    this.obtenirSales();
     this.eventEntraASala();
     this.eventSalaCreada();
   }

@@ -5,16 +5,6 @@ const salesRoutes = require('./sales');
 const usersRoutes = require('./users');
 const authRoutes = require('./auth');
 
-// guaranteed to get dependencies
-/* const allRoutes = () => {
-  const router = Router();
-  //auth(app);
-  //user(app);
-  sales(router);
-
-  //return router;
-} */
-
 // export a function that accepts `app` as a param
 module.exports = (app) => {
 

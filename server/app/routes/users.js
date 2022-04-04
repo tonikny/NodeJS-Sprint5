@@ -11,10 +11,10 @@ router.get('/', controllers.users.getUsers);
 router.get('/:id', controllers.users.getUser)
 
 // Update User
-router.put('/:id', controllers.users.updateUser)
+//router.put('/:id', controllers.users.updateUser)
 
 // Delete User
-router.delete('/:id', controllers.users.deleteUser)
+//router.delete('/:id', controllers.users.deleteUser)
 
 
 module.exports = router

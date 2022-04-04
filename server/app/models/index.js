@@ -74,17 +74,17 @@ Sala.hasMany(Missatge, { foreignKey: 'salaId' });
       if (populate) {
         await User.bulkCreate([
           {
-            id: 1, nom: 'aaa', email: 'a@a.com',
+            id: 1, nom: 'user1', email: 'user1',
             password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS'
           }, // password = 'xxx'
           {
-            id: 2, nom: 'toni', email: 'toni',
+            id: 2, nom: 'user2', email: 'user2',
             password: '$2b$10$WHYgUsrzxqnM2nj2QDsUyOHWg0Fdkgoig0sN9bVAnQnMrZY2cK1bS'
           }, // password = 'xxx'
         ]);
         await Sala.bulkCreate([
-          { id: 1, nom: 'sala1', creadaPer: 1 },
-          { id: 2, nom: 'salaX', creadaPer: 1 }
+          { id: 1, nom: 'prova_1', creadaPer: 1 },
+          { id: 2, nom: 'prova_2', creadaPer: 1 }
         ]);
         console.log(`Tables populated!`)
       }

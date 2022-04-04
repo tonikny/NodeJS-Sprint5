@@ -1,27 +1,30 @@
-# Client
+# Xat Client
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.6.
+## Instal·lació
+- Instal·lació de llibreries:
+  - `npm install`
+- Configurar connexió al servidor a src/environments/environment.ts.
 
-## Development server
+## Ús
+- `npm start`
+- Accedir a la URL proporcionada amb el navegador
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Estructura del projecte
 
-## Code scaffolding
+**src**:
+  **app**:
+    - **angular-material** - mòdul de gestió de material
+    - **auth** - mòdul de autenticació, amb els components de login, registre i usuari
+    - **models** - interfaces de dades
+    - **shared** - complements d'autenticació
+    - **services** - serveis de gestió de l'API i sockets
+    - **xat** - component principal del xat
+  - **app.component.ts** - Punt d'entrada a l'aplicació
+- **environments/environment.ts** - configuració del servidor
+- **package.json**
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Mòduls NPM necessaris usats addicionalment als d'Angular
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Ngx-socket-io
+- Rxjs
+- @angular/material 
