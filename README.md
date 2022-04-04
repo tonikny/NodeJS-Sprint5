@@ -21,12 +21,12 @@ La part del servidor està codificada amb NodeJS i Javascript, mentre que la par
 ### Pantalles d'exmple
 
 * Autenticació
-  * ![](imatges/login.png | width=300)
+  * ![](imatges/login.png)
 * Registre
-  * ![](imatges/registre.png | width=300)
+  * ![](imatges/registre.png)
 * Cap sala escollida
-  * ![](imatges/no_sala.png | width=300)
+  * ![](imatges/no_sala.png)
 * Xat entre dos usuaris a la mateixa sala
-  * ![](imatges/xat.png | width=300)
+  * ![](imatges/xat.png)
 
 
